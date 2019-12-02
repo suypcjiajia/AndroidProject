@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/welcome_blackgroud"
+    android:orientation="vertical">
+
+
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <fragment
+            android:id="@+id/myhome"
+            android:name="com.example.yiqi.HomeFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+
+        <fragment
+            android:id="@+id/mydevice"
+            android:name="com.example.yiqi.DeviceFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <fragment
+            android:id="@+id/myquery"
+            android:name="com.example.yiqi.QueryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <fragment
+            android:id="@+id/myme"
+            android:name="com.example.yiqi.MeFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#f2f2f2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnBottonHome"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/home2"
+            android:onClick="onBtnBottonHomeClick"
+            android:text="" />
+
+        <ImageButton
+            android:id="@+id/btnBottonDevice"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/device2"
+            android:onClick="onBtnBottonDeviceClick"
+            android:text="" />
+
+        <ImageButton
+            android:id="@+id/btnBottonQuery"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/query2"
+            android:onClick="onBtnBottonQueryClick"
+            android:text="" />
+
+        <ImageButton
+            android:id="@+id/btnBottonMe"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/user2"
+            android:onClick="onBtnBottonMeClick"
+            android:text="" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

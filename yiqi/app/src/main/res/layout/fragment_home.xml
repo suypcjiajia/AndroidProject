@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/consLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/btnMainHome"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/home1"
+
+            android:text="" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnMainLogin"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/user2"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登录"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="10px"
+        android:background="#4D4B4B" />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_weight="4"
+        android:layout_height="0dp">
+
+        <fragment
+            android:name = "com.example.yiqi.Fragment_onlinestate"
+            android:id="@+id/onlinestate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility = "visible"
+            />
+
+        <fragment
+            android:name = "com.example.yiqi.Fragment_expection"
+            android:id="@+id/expection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility = "invisible"
+            />
+
+        <fragment
+            android:name = "com.example.yiqi.Fragment_disk"
+            android:id="@+id/disk"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility = "invisible"
+            />
+
+        <fragment
+            android:name = "com.example.yiqi.BaoyangFragment"
+            android:id="@+id/baoyang"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility = "invisible"
+            />
+
+
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/textViewOnLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:text="在线状态" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_gravity="center"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/textViewExpection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:text="异常问题" />
+
+        <View
+            android:id="@+id/view5"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_gravity="center"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/textViewDisk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:text="磁盘状态" />
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_gravity="center"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/textViewBaoYang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:text="报阳信息" />
+    </LinearLayout>
+
+
+</LinearLayout>
