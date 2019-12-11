@@ -98,21 +98,26 @@ public class HomeFragment extends Fragment {
         textViewBaoyang.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                fragment_home.findViewById(R.id.onlinestate).setVisibility(View.INVISIBLE);
-                fragment_home.findViewById(R.id.expection).setVisibility(View.INVISIBLE);
-                fragment_home.findViewById(R.id.disk).setVisibility(View.INVISIBLE);
-                fragment_home.findViewById(R.id.baoyang).setVisibility(View.VISIBLE);
-
-                textViewOnLine.setTextColor(Color.parseColor("#000000"));
-                textViewExpection.setTextColor(Color.parseColor("#000000"));
-                textViewDisk.setTextColor(Color.parseColor("#000000"));
-                textViewBaoyang.setTextColor(Color.parseColor("#ff6600"));
+                switch2Baoyang();
 
             }
         });
         return fragment_home;
     }
 
+
+
+    public  void switch2Baoyang(){
+        fragment_home.findViewById(R.id.onlinestate).setVisibility(View.INVISIBLE);
+        fragment_home.findViewById(R.id.expection).setVisibility(View.INVISIBLE);
+        fragment_home.findViewById(R.id.disk).setVisibility(View.INVISIBLE);
+        fragment_home.findViewById(R.id.baoyang).setVisibility(View.VISIBLE);
+
+        textViewOnLine.setTextColor(Color.parseColor("#000000"));
+        textViewExpection.setTextColor(Color.parseColor("#000000"));
+        textViewDisk.setTextColor(Color.parseColor("#000000"));
+        textViewBaoyang.setTextColor(Color.parseColor("#ff6600"));
+    }
 
 
 

@@ -23,13 +23,20 @@ public class LoginActivity extends AppCompatActivity {
 
     JsonObject mResponse;
     String userName;
+    String userLevel;
     Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage( Message msg) {
             if (msg.what == 0x1) {
                 if( mResponse.get("code").getAsInt() == 0){
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    if( mResponse.get("isAdmin").getAsInt() == 1){
+                        userLevel = "管理员";
+                    }else{
+                        userLevel = "普通用户";
+                    }
                     intent.putExtra("userName",userName);
+                    intent.putExtra("userLevel",userLevel);
                     startActivity(intent);
                 }else{
                     System.out.println("showMsg:" + mResponse.get("status").getAsString());
@@ -54,10 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 final String name = edtName.getText().toString();
                 final String pwd = edtPwd.getText().toString();
                 System.out.println( "user:" + name + " pwd:" + pwd);
-
                 userName = name;
-
-
 
                 new Thread(){
                     public void run(){

@@ -10,16 +10,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="6dp"
         android:orientation="horizontal">
 
 
-        <Button
+        <ImageButton
             android:id="@+id/btnMainHome"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="2dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/home1"
 
             android:text="" />
@@ -34,17 +33,20 @@
 
         <ImageButton
             android:id="@+id/btnMainLogin"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:background="@drawable/user2"
             android:text="" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
             android:text="登录"
-            android:textSize="16dp" />
+            android:textSize="12dp" />
     </LinearLayout>
 
     <View
@@ -105,8 +107,8 @@
 
         <View
             android:id="@+id/view3"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
             android:layout_gravity="center"
             android:layout_marginLeft="30dp"
             android:background="#000000" />
@@ -122,8 +124,8 @@
 
         <View
             android:id="@+id/view4"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
             android:layout_gravity="center"
             android:background="#000000" />
 
@@ -138,8 +140,8 @@
 
         <View
             android:id="@+id/view5"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
             android:layout_gravity="center"
             android:background="#000000" />
 
@@ -154,8 +156,8 @@
 
         <View
             android:id="@+id/view6"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
             android:layout_gravity="center"
             android:background="#000000" />
 

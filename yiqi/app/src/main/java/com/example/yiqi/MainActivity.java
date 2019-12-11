@@ -1,13 +1,20 @@
 package com.example.yiqi;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.tool.Http;
+import com.example.tool.WsClient;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
@@ -15,16 +22,20 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,12 +43,26 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
+
+    String[] baoYangs;
+    List<PieEntry> onlinePieEntry;
+    List<PieEntry> exceptionPieEntry;
+    List<PieEntry> diskPieEntry;
+    Boolean toBaoyang = false;
+
+    private WsClient mWsClient;
+    private NotificationManager notificationMg ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +74,7 @@ public class MainActivity extends AppCompatActivity{
             public  void  onClick(View v){
                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                startActivity(intent);
+
             }
         });
 
@@ -59,11 +85,23 @@ public class MainActivity extends AppCompatActivity{
 
         findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home1);
 
-        httpBaoyang();
+
+        notificationMg  =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+
+        try {
+            mWsClient = new WsClient();
+            mWsClient.setActivity(MainActivity.this);
+            mWsClient.connect();
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
 
         thread.start();
 
-        System.out.println("onCreate");
+        System.out.println("MainActivity onCreate");
+
     }
 
     @Override
@@ -71,42 +109,58 @@ public class MainActivity extends AppCompatActivity{
         super.onStart();
         Intent intent = getIntent();
 
+
         String userName = intent.getStringExtra("userName");
+        String userLevel = intent.getStringExtra("userLevel");
         TextView userTxt = findViewById(R.id.textViewUserName);
         userTxt.setText(userName);
+        TextView textViewLevel = findViewById(R.id.textViewLevel);
+        textViewLevel.setText(userLevel);
 
-        System.out.println("onStart");
+
+        if( toBaoyang){
+            toBaoyang = false;
+            findViewById(R.id.myhome).setVisibility(View.VISIBLE);
+            findViewById(R.id.mydevice).setVisibility(View.INVISIBLE);
+            findViewById(R.id.myquery).setVisibility(View.INVISIBLE);
+            findViewById(R.id.myme).setVisibility(View.INVISIBLE);
+
+            ((HomeFragment)getSupportFragmentManager().findFragmentById(R.id.myhome)).switch2Baoyang();
+        }
+
+        System.out.println("MainActivity onStart");
     }
 
     @Override
     public void onRestart(){
         super.onRestart();
-        System.out.println("onRestart");
+        System.out.println("MainActivity onRestart");
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        System.out.println("onResume");
+        System.out.println("MainActivity onResume");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        System.out.println("onPause");
+        System.out.println("MainActivity onPause");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        System.out.println("onStop");
+        System.out.println("MainActivity onStop");
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        System.out.println("onDestroy");
+        System.out.println("MainActivity onDestroy");
     }
+
 
     public void onBtnBottonHomeClick(View v){
         //Fragment home =  getSupportFragmentManager().findFragmentById(R.id.myhome);
@@ -133,6 +187,10 @@ public class MainActivity extends AppCompatActivity{
         findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device1);
         findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.query2);
         findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user2);
+
+
+        findViewById(R.id.page2).setVisibility(View.VISIBLE);
+        findViewById(R.id.fragmentDevlist).setVisibility(View.INVISIBLE);
     }
 
     public void onBtnBottonQueryClick(View v){
@@ -159,9 +217,11 @@ public class MainActivity extends AppCompatActivity{
         findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user1);
     }
 
+
     Thread  thread = new Thread()
     {
         public void run() {
+
 
             while(true) {
 
@@ -169,6 +229,7 @@ public class MainActivity extends AppCompatActivity{
                     httpOnlinesummary();
                     httpExceptionsummary();
                     httpAlldisksummary();
+                    httpBaoyang();
                 }catch (Exception e){
                     System.out.println(e.getMessage());
                 }
@@ -181,6 +242,7 @@ public class MainActivity extends AppCompatActivity{
                 System.out.println("MainActivity run");
 
                 mHandler.sendEmptyMessage(20);
+
             }
         }
     };
@@ -188,8 +250,20 @@ public class MainActivity extends AppCompatActivity{
     Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
+
             if (msg.what == 20) {
 
+            }else if(msg.what == 21){
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, baoYangs);
+                ListView listView = (ListView)findViewById(R.id.listViewBaoyang);
+                //将构建好的适配器对象传进去
+                listView.setAdapter(adapter);
+            }else if( msg.what == 22){
+                setCharData(onlinePieEntry,1);
+            }else if( msg.what == 23){
+                setCharData(exceptionPieEntry,2);
+            }else if( msg.what == 24){
+                setCharData(diskPieEntry,3);
             }
             return true;
         }
@@ -220,8 +294,10 @@ public class MainActivity extends AppCompatActivity{
             strings.add(new PieEntry( 0 ,""));
             strings.add(new PieEntry(  0,""));
         }
+        onlinePieEntry = strings;
+        mHandler.sendEmptyMessage(22);
 
-        setCharData(strings,1);
+
     }
 
     private void httpExceptionsummary(){
@@ -240,41 +316,68 @@ public class MainActivity extends AppCompatActivity{
 
             strings.add(new PieEntry(  0,""));
         }
+        exceptionPieEntry = strings;
 
-        setCharData(strings,2);
+        mHandler.sendEmptyMessage(23);
+
     }
 
     private void httpAlldisksummary(){
 
         List<PieEntry> strings = new ArrayList<>();
-        JsonObject json = Http.exceptionsummary();
+        JsonObject json = Http.alldisksummary();
         if (json.get("code").getAsInt() == 0) {
-            String available = json.get("available").getAsString();
-            String total = json.get("total").getAsString();
+            String available = json.get("available").getAsString() ;
+            String total =  json.get("total").getAsString();
 
 
-            strings.add(new PieEntry( Integer.parseInt(available) ,""));
-            strings.add(new PieEntry(  Integer.parseInt(total) - Integer.parseInt(total),""));
+            strings.add(new PieEntry( Float.parseFloat(available) ,""));
+            strings.add(new PieEntry(  Float.parseFloat(total) - Float.parseFloat(available),""));
 
         } else {
 
             strings.add(new PieEntry(  0,""));
         }
+        diskPieEntry = strings;
+        mHandler.sendEmptyMessage(24);
 
-        setCharData(strings,3);
+
     }
 
     private void httpBaoyang(){
-        String[] data = {"Sunny","Cloudy","Few Clouds","Partly Cloudy","Overcast","Windy","Calm","Light Breeze",
-                "Moderate","Fresh Breeze","Strong Breeze","High Wind","Gale","Strong Gale","Storm","Violent Storm","Hurricane",
-                "Tornado","Tropical Storm","Shower Rain","Heavy Shower Rain","Thundershower","Heavy Thunderstorm",
-                "Thundershower with hail" ,"Unknown"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, data);
-        ListView listView = (ListView)findViewById(R.id.listViewBaoyang);
-        //将构建好的适配器对象传进去
-        listView.setAdapter(adapter);
+
+        JsonObject json = Http.bchistory("2019-11-01");
+
+        if (json.get("code").getAsInt() == 0){
+            JsonArray lists = json.get("lists").getAsJsonArray();
+
+            String[] data  = new String[lists.size()];
+
+            for( int i = 0; i < lists.size(); i++){
+
+                String MachineID = lists.get(i).getAsJsonObject().get("MachineID").toString();
+                String ExtensionNum = lists.get(i).getAsJsonObject().get("ExtensionNum").toString();
+                String HoleNum = lists.get(i).getAsJsonObject().get("HoleNum").toString();
+                String PositiveTime = lists.get(i).getAsJsonObject().get("PositiveTime").toString();
+
+                data[i] = MachineID + " " +  ExtensionNum  + " " + HoleNum + " " +  PositiveTime;
+
+                System.out.println( "item:" + data[i]);
+
+
+            }
+            baoYangs = data;
+
+            mHandler.sendEmptyMessage(21);
+
+
+        }
+
 
     }
+
+
+
 
 
     public void setCharData(List<PieEntry> strings,int type){
@@ -323,6 +426,42 @@ public class MainActivity extends AppCompatActivity{
 
         chart1.setData(pieData);
         chart1.invalidate();
+    }
+
+    public void mynotify(String msg){
+        //定义一个PendingIntent点击Notification后启动一个Activity
+        Intent intent = new Intent(MainActivity.this,MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+
+
+        Notification noti = new Notification.Builder(MainActivity.this)
+                .setSmallIcon(R.drawable.home1)
+                .setContentTitle("报阳通知")
+                .setContentText(msg)
+                .setSmallIcon(R.drawable.home1)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.home1))
+                .setAutoCancel(true)
+                .setVibrate(new long[]{0, 1000, 1000, 1000}) //通知栏消息震动
+                .setLights(Color.GREEN, 1000, 2000) //通知栏消息闪灯(亮一秒间隔两秒再亮)
+                .setContentIntent(pendingIntent)
+                .build();//链接结束
+
+
+        noti.defaults = Notification.DEFAULT_ALL; //震动,加提示音
+        notificationMg.notify(10,noti);//管理者发送通知,数字代表标识
+
+
+        //获取电源管理器对象
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, ":bright");
+        //点亮屏幕
+        wl.acquire();
+        //释放
+        wl.release();
+
+
+        toBaoyang = true;
     }
 
 }

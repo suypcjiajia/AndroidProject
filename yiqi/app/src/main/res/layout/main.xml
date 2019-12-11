@@ -47,15 +47,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#f2f2f2"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btnBottonHome"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="35dp"
             android:layout_weight="1"
             android:background="@drawable/home2"
             android:onClick="onBtnBottonHomeClick"
@@ -65,7 +64,7 @@
             android:id="@+id/btnBottonDevice"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="35dp"
             android:layout_weight="1"
             android:background="@drawable/device2"
             android:onClick="onBtnBottonDeviceClick"
@@ -75,7 +74,7 @@
             android:id="@+id/btnBottonQuery"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="35dp"
             android:layout_weight="1"
             android:background="@drawable/query2"
             android:onClick="onBtnBottonQueryClick"
@@ -85,14 +84,52 @@
             android:id="@+id/btnBottonMe"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
             android:layout_weight="1"
             android:background="@drawable/user2"
             android:onClick="onBtnBottonMeClick"
             android:text="" />
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="top"
+        android:layout_height="30dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="20dp"
+            android:layout_marginLeft="35dp"
+            android:textAlignment="center"
+            android:text="首页"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="20dp"
+            android:layout_marginLeft="35dp"
+            android:textAlignment="center"
+            android:text="设备"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="20dp"
+            android:layout_marginLeft="35dp"
+            android:textAlignment="center"
+            android:text="地图"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="20dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:textAlignment="center"
+            android:text="我的"
+            />
+    </LinearLayout>
 
 
 </LinearLayout>

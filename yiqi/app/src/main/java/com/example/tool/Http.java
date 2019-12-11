@@ -18,7 +18,8 @@ import java.util.Map;
  */
 public final class Http {
 
-    private static final String ipaddr ="192.168.0.91:1874";
+    //private static final String ipaddr ="192.168.0.91:1874";
+    private static final String ipaddr = "120.196.141.28:1874";
 
     /**
      * 登录验证
@@ -86,6 +87,22 @@ public final class Http {
     public static JsonObject alldisksummary(){
         try {
             String response = sendPost("http://" + ipaddr + "/list/alldisksummary", "");
+            System.out.println(response);
+            JsonElement element = JsonParser.parseString(response);
+
+            JsonObject jsonRes =  element.getAsJsonObject();
+            return jsonRes;
+
+        }catch (IllegalStateException e){
+            return makeExpetion(e);
+        }
+    }
+
+    public static JsonObject bchistory(String date){
+        try {
+            JsonObject json = new JsonObject();
+            json.addProperty("datetime", date);
+            String response = sendPost("http://" + ipaddr + "/alert/get/bchistory", json.toString());
             System.out.println(response);
             JsonElement element = JsonParser.parseString(response);
 
