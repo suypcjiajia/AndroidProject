@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private WsClient mWsClient;
     private NotificationManager notificationMg ;
 
+    private  int notifiIndex = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             mWsClient = new WsClient();
             mWsClient.setActivity(MainActivity.this);
-            mWsClient.connect();
+            mWsClient.start();
 
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -448,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         noti.defaults = Notification.DEFAULT_ALL; //震动,加提示音
-        notificationMg.notify(10,noti);//管理者发送通知,数字代表标识
+        notificationMg.notify(notifiIndex++,noti);//管理者发送通知,数字代表标识
 
 
         //获取电源管理器对象

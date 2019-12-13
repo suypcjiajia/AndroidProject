@@ -1,6 +1,7 @@
 package com.example.yiqi;
 
 
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,6 +17,14 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeAddress;
+import com.amap.api.services.geocoder.GeocodeQuery;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeResult;
+
+import java.util.List;
 
 
 /**
@@ -26,6 +35,10 @@ public class QueryFragment extends Fragment {
 
     View root;
     MapView mMapView = null;
+    AMap aMap;
+    GeocodeSearch geocoderSearch ;
+
+
 
     // 定义 Marker 点击事件监听
     AMap.OnMarkerClickListener markerClickListener = new AMap.OnMarkerClickListener() {
@@ -53,7 +66,7 @@ public class QueryFragment extends Fragment {
         mMapView = root.findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
         //初始化地图控制器对象
-        AMap aMap = mMapView.getMap();
+        aMap = mMapView.getMap();
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
@@ -63,12 +76,17 @@ public class QueryFragment extends Fragment {
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
 
-        //113.365553,22.062412
         LatLng latLng2 = new LatLng(22.062412,113.365553);
         aMap.addMarker(new MarkerOptions().position(latLng2).title("丽康医院").snippet("设备数量:8台"));
-        //113.405941,22.067101
+
         LatLng latLng = new LatLng(22.067101,113.405941);
         aMap.addMarker(new MarkerOptions().position(latLng).title("遵义医学院").snippet("设备数量:6台"));
+
+        geocoderSearch = new GeocodeSearch(getContext());
+        geocoderSearch.setOnGeocodeSearchListener(onGeocodeSearchListener);
+        GeocodeQuery query = new GeocodeQuery("珠海市金湾区迪尔生物工程","");
+        geocoderSearch.getFromLocationNameAsyn(query);
+
 
 
 
@@ -110,6 +128,30 @@ public class QueryFragment extends Fragment {
                 .create();
         alertDialog1.show();
     }
+
+    GeocodeSearch.OnGeocodeSearchListener  onGeocodeSearchListener = new GeocodeSearch.OnGeocodeSearchListener(){
+
+        @Override
+        public void onRegeocodeSearched(RegeocodeResult var1, int var2){
+
+        }
+
+        @Override
+        public void onGeocodeSearched(GeocodeResult var1, int var2){
+            String tmp = new String();
+            List<GeocodeAddress>  addrs= var1.getGeocodeAddressList();
+            for( GeocodeAddress addr : addrs){
+                LatLonPoint latlon = addr.getLatLonPoint();
+                tmp += latlon.toString();
+            }
+
+            System.out.println( "onGeocodeSearched:" + tmp);
+
+
+            LatLng latlng = aMap.getProjection().fromScreenLocation(new Point(10,10));
+            System.out.println("onGeocodeSearched:" +   latlng.toString());
+        }
+    };
 }
 
 

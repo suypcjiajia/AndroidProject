@@ -64,6 +64,10 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {//防止：app 退出到后台后，未被杀死，仍在运行，但是点击图标后会重新启动一次，再次重新创建一系列页面
+            finish();
+            return;
+        }
         thread.start();
     }
 
