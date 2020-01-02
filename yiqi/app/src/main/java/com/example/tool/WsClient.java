@@ -6,6 +6,7 @@ package com.example.tool;
 import android.app.Activity;
 
 import com.example.yiqi.MainActivity;
+import com.example.yiqi.MyService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,7 +20,8 @@ import java.net.URISyntaxException;
 public class WsClient extends WebSocketClient {
    // static String uri = "ws://192.168.0.91:1877";
     static String uri = "ws://120.196.141.28:1877";
-    private MainActivity mActivity;
+
+    private MyService mMyService;
     private Boolean rooter = true;
     private WsClient me = this;
     private Boolean mNeedOpen  = true;//保证只connect一次
@@ -51,10 +53,16 @@ public class WsClient extends WebSocketClient {
         if( rooter) {
             JsonElement element = JsonParser.parseString(message);
             JsonObject jsonRes =  element.getAsJsonObject();
-            if(jsonRes.get("status").getAsString().equals("connected") ){//过滤连接后服务器返回的消息
-                return;
+            if( jsonRes.get("status") != null){
+                if( jsonRes.get("status").getAsString().equals("connected") ){//过滤连接后服务器返回的消息
+                    return;
+                }
             }
-            mActivity.mynotify(message);
+
+            if( mMyService != null){
+                mMyService.mynotify(message);
+            }
+
         }
     }
 
@@ -68,8 +76,8 @@ public class WsClient extends WebSocketClient {
         ex.printStackTrace();
     }
 
-    public void setActivity(MainActivity activity){
-        mActivity = activity;
+    public void setService(MyService service){
+        mMyService = service;
     }
 
     public  void start(){
@@ -85,7 +93,7 @@ public class WsClient extends WebSocketClient {
     {
         private int counts;
         private  int sleepMill = 2000;//一次循环睡多久，必须是1000的倍数
-        private int seconds = 30;//秒，时间到就重连
+        private int seconds = 10;//秒，时间到就重连
         public void run() {
             counts = 0;
             while(true) {

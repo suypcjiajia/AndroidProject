@@ -1,6 +1,7 @@
 package com.example.yiqi;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,9 +12,11 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.tool.Http;
+import com.example.tool.NotificationUtil;
 import com.example.tool.WsClient;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -27,11 +30,14 @@ import com.google.gson.JsonObject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.os.Message;
@@ -54,16 +60,25 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] baoYangs;
+
+    JsonArray mBaoYangs;
     List<PieEntry> onlinePieEntry;
     List<PieEntry> exceptionPieEntry;
     List<PieEntry> diskPieEntry;
-    Boolean toBaoyang = false;
 
-    private WsClient mWsClient;
-    private NotificationManager notificationMg ;
+    String onlineTxt1;
+    String onlineTxt2;
+    String exceptionTxt1;
+    String exceptionTxt2;
+    String diskTxt1;
+    String diskTxt2;
 
-    private  int notifiIndex = 1;
+    HomeFragment homePage;
+    DeviceFragment devicePage;
+    QueryFragment queryPage;
+    MeFragment mePage;
+
+    androidx.viewpager.widget.ViewPager viewPager;
 
 
     @Override
@@ -71,36 +86,43 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        ImageButton btn = findViewById(R.id.btnMainLogin);
-        btn.setOnClickListener(new View.OnClickListener(){
-            public  void  onClick(View v){
-               Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-               startActivity(intent);
-
-            }
-        });
-
-        findViewById(R.id.myhome).setVisibility(View.VISIBLE);
-        findViewById(R.id.mydevice).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myquery).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myme).setVisibility(View.INVISIBLE);
-
-        findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home1);
 
 
-        notificationMg  =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 
-        try {
-            mWsClient = new WsClient();
-            mWsClient.setActivity(MainActivity.this);
-            mWsClient.start();
+//        homePage = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.myhome);
+//        devicePage = (DeviceFragment) getSupportFragmentManager().findFragmentById(R.id.mydevice);
+//        queryPage = (QueryFragment) getSupportFragmentManager().findFragmentById(R.id.myquery);
+//        mePage = (MeFragment) getSupportFragmentManager().findFragmentById(R.id.myme);
 
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+        homePage = new HomeFragment();
+        devicePage = new DeviceFragment();
+        queryPage = new QueryFragment();
+        mePage = new MeFragment();
+        List<Fragment> listView = new ArrayList<>();
+        listView.add(homePage);
+        listView.add(devicePage);
+        listView.add(queryPage);
+        listView.add(mePage);
+        MyViewAdapter viewAdapter = new MyViewAdapter(getSupportFragmentManager(), listView);
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(viewAdapter);
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.addOnPageChangeListener(onPageChangeListener);
+
+        setBottonHomeButton();
+
 
         thread.start();
+
+        //启动服务
+        Intent serintent = new Intent(this,MyService.class);
+        startService(serintent);
+
+        //判断该app是否打开了通知，如果没有的话就打开手机设置页面
+        NotificationUtil notiUtil = new NotificationUtil();
+        notiUtil.openNotificationSetting(this);
+
 
         System.out.println("MainActivity onCreate");
 
@@ -112,25 +134,30 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
 
-        String userName = intent.getStringExtra("userName");
-        String userLevel = intent.getStringExtra("userLevel");
-        TextView userTxt = findViewById(R.id.textViewUserName);
-        userTxt.setText(userName);
-        TextView textViewLevel = findViewById(R.id.textViewLevel);
-        textViewLevel.setText(userLevel);
-
-
-        if( toBaoyang){
-            toBaoyang = false;
-            findViewById(R.id.myhome).setVisibility(View.VISIBLE);
-            findViewById(R.id.mydevice).setVisibility(View.INVISIBLE);
-            findViewById(R.id.myquery).setVisibility(View.INVISIBLE);
-            findViewById(R.id.myme).setVisibility(View.INVISIBLE);
-
-            ((HomeFragment)getSupportFragmentManager().findFragmentById(R.id.myhome)).switch2Baoyang();
-        }
+        handleNotify(intent);
 
         System.out.println("MainActivity onStart");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        System.out.println("MainActivity onNewIntent");
+        String userName = intent.getStringExtra("userName");
+        String userLevel = intent.getStringExtra("userLevel");
+        mePage.setUserInfo(userName,userLevel);
+        handleNotify(intent);
+    }
+
+    private void handleNotify(Intent intent){
+        Bundle bdl = intent.getExtras();
+        if(bdl != null){
+            String cmd = intent.getExtras().getString("cmd");
+            if(cmd != null && cmd.equals("to")){
+                toHomePage();
+                homePage.switch2Baoyang();
+            }
+        }
     }
 
     @Override
@@ -165,72 +192,120 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onBtnBottonHomeClick(View v){
-        //Fragment home =  getSupportFragmentManager().findFragmentById(R.id.myhome);
-        findViewById(R.id.myhome).setVisibility(View.VISIBLE);
-        findViewById(R.id.mydevice).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myquery).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myme).setVisibility(View.INVISIBLE);
 
-        findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home1);
-        findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device2);
-        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.query2);
-        findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user2);
-
+        toHomePage();
 
     }
 
     public void onBtnBottonDeviceClick(View v){
-        findViewById(R.id.myhome).setVisibility(View.INVISIBLE);
-        findViewById(R.id.mydevice).setVisibility(View.VISIBLE);
-        findViewById(R.id.myquery).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myme).setVisibility(View.INVISIBLE);
 
-        findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home2);
-        findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device1);
-        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.query2);
-        findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user2);
+        toDevicePage();
 
 
-        findViewById(R.id.page2).setVisibility(View.VISIBLE);
-        findViewById(R.id.fragmentDevlist).setVisibility(View.INVISIBLE);
     }
 
     public void onBtnBottonQueryClick(View v){
-        findViewById(R.id.myhome).setVisibility(View.INVISIBLE);
-        findViewById(R.id.mydevice).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myquery).setVisibility(View.VISIBLE);
-        findViewById(R.id.myme).setVisibility(View.INVISIBLE);
 
-        findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home2);
-        findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device2);
-        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.query1);
-        findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user2);
+        toQueryPage();
+
     }
 
     public void onBtnBottonMeClick(View v){
-        findViewById(R.id.myhome).setVisibility(View.INVISIBLE);
-        findViewById(R.id.mydevice).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myquery).setVisibility(View.INVISIBLE);
-        findViewById(R.id.myme).setVisibility(View.VISIBLE);
 
+        toMePage();
+
+    }
+
+    //切换Fragment到home页
+    public void toHomePage(){
+
+        viewPager.setCurrentItem(0);
+        setBottonHomeButton();
+
+    }
+
+    public void setBottonHomeButton(){
+        findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home1);
+        findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device2);
+        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.ditu2);
+        findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user2);
+    }
+    //切换Fragment到Device页
+    public void toDevicePage(){
+
+
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .hide(homePage).show(devicePage).hide(queryPage).hide(mePage).commit();
+        viewPager.setCurrentItem(1);
+        devicePage.switchPage(1);
+        setBottonDeviceButton();
+
+    }
+
+    public void setBottonDeviceButton(){
+        findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home2);
+        findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device1);
+        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.ditu2);
+        findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user2);
+    }
+    //切换Fragment到query页
+    public void toQueryPage(){
+
+
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .hide(homePage).hide(devicePage).show(queryPage).hide(mePage).commit();
+        viewPager.setCurrentItem(2);
+
+        setBottonQueryButton();
+    }
+
+    public void setBottonQueryButton(){
         findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home2);
         findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device2);
-        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.query2);
+        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.ditu1);
+        findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user2);
+    }
+    //切换Fragment到me页
+    public void toMePage(){
+
+
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .hide(homePage).hide(devicePage).hide(queryPage).show(mePage).commit();
+        viewPager.setCurrentItem(3);
+        setBottonMeButton();
+    }
+
+    public void setBottonMeButton(){
+        findViewById(R.id.btnBottonHome).setBackgroundResource(R.drawable.home2);
+        findViewById(R.id.btnBottonDevice).setBackgroundResource(R.drawable.device2);
+        findViewById(R.id.btnBottonQuery).setBackgroundResource(R.drawable.ditu2);
         findViewById(R.id.btnBottonMe).setBackgroundResource(R.drawable.user1);
     }
+
+    public void toHospitaoPos(String address,String name){
+        toQueryPage();
+        queryPage.toHospitalPos(address,name);
+    }
+
 
 
     Thread  thread = new Thread()
     {
         public void run() {
 
+            int loops = 0;
 
             while(true) {
 
                 try {
-                    httpOnlinesummary();
-                    httpExceptionsummary();
-                    httpAlldisksummary();
+                    if( loops == 0) {
+                        httpOnlinesummary();
+                        httpExceptionsummary();
+                        httpAlldisksummary();
+                    }
                     httpBaoyang();
                 }catch (Exception e){
                     System.out.println(e.getMessage());
@@ -241,9 +316,11 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     System.out.println(e.getMessage()  );
                 }
-                System.out.println("MainActivity run");
 
-                mHandler.sendEmptyMessage(20);
+                loops++;
+                if( loops >= 2){
+                    loops = 0;
+                }
 
             }
         }
@@ -256,16 +333,19 @@ public class MainActivity extends AppCompatActivity {
             if (msg.what == 20) {
 
             }else if(msg.what == 21){
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, baoYangs);
-                ListView listView = (ListView)findViewById(R.id.listViewBaoyang);
-                //将构建好的适配器对象传进去
-                listView.setAdapter(adapter);
+
+                homePage.setBaoYang(mBaoYangs);
+
+
             }else if( msg.what == 22){
-                setCharData(onlinePieEntry,1);
+                homePage.setOnLineTxt(onlineTxt1,onlineTxt2);
+                homePage.setCharData(onlinePieEntry,1);
             }else if( msg.what == 23){
-                setCharData(exceptionPieEntry,2);
+                homePage.setExceptionTxt(exceptionTxt1,exceptionTxt2);
+                homePage.setCharData(exceptionPieEntry,2);
             }else if( msg.what == 24){
-                setCharData(diskPieEntry,3);
+                homePage.setDiskTxt(diskTxt1,diskTxt2);
+                homePage.setCharData(diskPieEntry,3);
             }
             return true;
         }
@@ -278,20 +358,13 @@ public class MainActivity extends AppCompatActivity {
         if (json.get("code").getAsInt() == 0) {
             String online_count = json.get("online_count").getAsString();
             String count = json.get("count").getAsString();
-            TextView t = findViewById(R.id.textViewOnline2);
-            t.setText(online_count + "/" + count);
-
-            TextView t2 = findViewById(R.id.textViewOnline3);
-            t2.setText("总共" +  count + "台设备,在线"  + online_count + "台");
+            onlineTxt1 = online_count + "/" + count;
+            onlineTxt2 = "总共" +  count + "台设备,在线"  + online_count + "台";
 
             strings.add(new PieEntry( Integer.parseInt(online_count) ,""));
             strings.add(new PieEntry(  Integer.parseInt(count) - Integer.parseInt(online_count),""));
 
         } else {
-            TextView t = findViewById(R.id.textViewOnline2);
-            t.setText("0/0");
-            TextView t2 = findViewById(R.id.textViewOnline3);
-            t2.setText("总共0台设备,在线0台");
 
             strings.add(new PieEntry( 0 ,""));
             strings.add(new PieEntry(  0,""));
@@ -309,6 +382,8 @@ public class MainActivity extends AppCompatActivity {
         if (json.get("code").getAsInt() == 0) {
             String exception_count = json.get("exception_count").getAsString();
             String count = json.get("count").getAsString();
+            exceptionTxt1 = exception_count + "/" + count;
+            exceptionTxt2 = "总共" +  count + "台设备,异常"  + exception_count + "台";
 
 
             strings.add(new PieEntry( Integer.parseInt(exception_count) ,""));
@@ -331,8 +406,8 @@ public class MainActivity extends AppCompatActivity {
         if (json.get("code").getAsInt() == 0) {
             String available = json.get("available").getAsString() ;
             String total =  json.get("total").getAsString();
-
-
+            diskTxt1 = available + "/" + total;
+            diskTxt2 = "总共" +  total + "Mb,已使用"  + available + "Mb";
             strings.add(new PieEntry( Float.parseFloat(available) ,""));
             strings.add(new PieEntry(  Float.parseFloat(total) - Float.parseFloat(available),""));
 
@@ -348,27 +423,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void httpBaoyang(){
 
-        JsonObject json = Http.bchistory("2019-11-01");
+        JsonObject json = Http.bchistory("2020-01-01");
 
         if (json.get("code").getAsInt() == 0){
-            JsonArray lists = json.get("lists").getAsJsonArray();
-
-            String[] data  = new String[lists.size()];
-
-            for( int i = 0; i < lists.size(); i++){
-
-                String MachineID = lists.get(i).getAsJsonObject().get("MachineID").toString();
-                String ExtensionNum = lists.get(i).getAsJsonObject().get("ExtensionNum").toString();
-                String HoleNum = lists.get(i).getAsJsonObject().get("HoleNum").toString();
-                String PositiveTime = lists.get(i).getAsJsonObject().get("PositiveTime").toString();
-
-                data[i] = MachineID + " " +  ExtensionNum  + " " + HoleNum + " " +  PositiveTime;
-
-                System.out.println( "item:" + data[i]);
-
-
-            }
-            baoYangs = data;
+            mBaoYangs = json.get("lists").getAsJsonArray();
 
             mHandler.sendEmptyMessage(21);
 
@@ -378,92 +436,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener(){
+        public  void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
 
-
-
-
-    public void setCharData(List<PieEntry> strings,int type){
-
-        PieChart chart1 ;
-        ArrayList<Integer> colors = new ArrayList<>();
-        if(type == 1){
-            chart1 = findViewById(R.id.chart1);
-
-            colors.add(getResources().getColor(R.color.greencao));
-            colors.add(getResources().getColor(R.color.blackb3));
-
-
-        }else if( type == 2){
-            chart1 = findViewById(R.id.chart2);
-
-            colors.add(getResources().getColor(R.color.red));
-            colors.add(getResources().getColor(R.color.blackb3));
-
-
-        }else if( type == 3){
-            chart1 = findViewById(R.id.chart3);
-
-            colors.add(getResources().getColor(R.color.redju));
-            colors.add(getResources().getColor(R.color.blackb3));
-
-
-        }else{
-            return;
         }
-        PieDataSet dataSet = new PieDataSet(strings,"");
+
+
+        public  void onPageSelected(int position){
+            if( position == 0){
+                setBottonHomeButton();
+            }else if( position == 1){
+                toDevicePage();
+            }else if( position == 2){
+                setBottonQueryButton();
+            }else if( position == 3){
+                setBottonMeButton();
+            }
+        }
 
 
 
+        public void onPageScrollStateChanged(int state){
 
+        }
+    };
 
-        dataSet.setColors(colors);
-
-        PieData pieData = new PieData(dataSet);
-        pieData.setDrawValues(false);
-
-
-        Description description = new Description();
-        description.setText("");
-        chart1.setDescription(description);
-
-        chart1.setData(pieData);
-        chart1.invalidate();
-    }
-
-    public void mynotify(String msg){
-        //定义一个PendingIntent点击Notification后启动一个Activity
-        Intent intent = new Intent(MainActivity.this,MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-
-
-        Notification noti = new Notification.Builder(MainActivity.this)
-                .setSmallIcon(R.drawable.home1)
-                .setContentTitle("报阳通知")
-                .setContentText(msg)
-                .setSmallIcon(R.drawable.home1)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.home1))
-                .setAutoCancel(true)
-                .setVibrate(new long[]{0, 1000, 1000, 1000}) //通知栏消息震动
-                .setLights(Color.GREEN, 1000, 2000) //通知栏消息闪灯(亮一秒间隔两秒再亮)
-                .setContentIntent(pendingIntent)
-                .build();//链接结束
-
-
-        noti.defaults = Notification.DEFAULT_ALL; //震动,加提示音
-        notificationMg.notify(notifiIndex++,noti);//管理者发送通知,数字代表标识
-
-
-        //获取电源管理器对象
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, ":bright");
-        //点亮屏幕
-        wl.acquire();
-        //释放
-        wl.release();
-
-
-        toBaoyang = true;
-    }
 
 }

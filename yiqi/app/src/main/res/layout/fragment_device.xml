@@ -31,23 +31,23 @@
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btnMainLogin"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:background="@drawable/add"
-            android:text="" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnMainLogin"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:background="@drawable/add"-->
+<!--            android:text="" />-->
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp"
-            android:text="添加"
-            android:textSize="12dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:text="添加"-->
+<!--            android:textSize="12dp" />-->
     </LinearLayout>
 
     <View

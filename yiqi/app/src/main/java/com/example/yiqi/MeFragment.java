@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -15,9 +16,18 @@ import android.view.ViewGroup;
  */
 public class MeFragment extends Fragment {
 
+    View root = null;
 
     public MeFragment() {
         // Required empty public constructor
+    }
+    public void setUserInfo(String userName,String userLevel){
+        if( root != null){
+            TextView userTxt = root.findViewById(R.id.textViewUserName);
+            userTxt.setText(userName);
+            TextView textViewLevel = root.findViewById(R.id.textViewLevel);
+            textViewLevel.setText(userLevel);
+        }
     }
 
 
@@ -25,7 +35,8 @@ public class MeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_me, container, false);
+        root =  inflater.inflate(R.layout.fragment_me, container, false);
+        return root;
     }
 
 }

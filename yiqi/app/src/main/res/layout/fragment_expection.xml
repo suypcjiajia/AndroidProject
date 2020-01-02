@@ -42,4 +42,20 @@
         android:layout_height="177dp"
         android:layout_gravity="center"/>
 
+    <TextView
+        android:id="@+id/textViewExpection2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0/0"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/textViewExpection3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="总共0台设备,异常0台"
+        android:textAlignment="center"
+        android:textSize="16sp" />
+
 </LinearLayout>

@@ -8,53 +8,60 @@
 
 
 
-    <FrameLayout
-        android:layout_width="match_parent"
+<!--    <FrameLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1">-->
+
+<!--        <fragment-->
+<!--            android:id="@+id/myquery"-->
+<!--            android:name="com.example.yiqi.QueryFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+<!--        <fragment-->
+<!--            android:id="@+id/myhome"-->
+<!--            android:name="com.example.yiqi.HomeFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+<!--        <fragment-->
+<!--            android:id="@+id/mydevice"-->
+<!--            android:name="com.example.yiqi.DeviceFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+
+
+<!--        <fragment-->
+<!--            android:id="@+id/myme"-->
+<!--            android:name="com.example.yiqi.MeFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+<!--    </FrameLayout>-->
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <fragment
-            android:id="@+id/myhome"
-            android:name="com.example.yiqi.HomeFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible" />
-
-        <fragment
-            android:id="@+id/mydevice"
-            android:name="com.example.yiqi.DeviceFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
-
-        <fragment
-            android:id="@+id/myquery"
-            android:name="com.example.yiqi.QueryFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
-
-        <fragment
-            android:id="@+id/myme"
-            android:name="com.example.yiqi.MeFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
-
-    </FrameLayout>
+    </androidx.viewpager.widget.ViewPager>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:gravity="bottom"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btnBottonHome"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:layout_weight="1"
             android:background="@drawable/home2"
             android:onClick="onBtnBottonHomeClick"
@@ -64,7 +71,7 @@
             android:id="@+id/btnBottonDevice"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:layout_weight="1"
             android:background="@drawable/device2"
             android:onClick="onBtnBottonDeviceClick"
@@ -74,9 +81,9 @@
             android:id="@+id/btnBottonQuery"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:layout_weight="1"
-            android:background="@drawable/query2"
+            android:background="@drawable/ditu2"
             android:onClick="onBtnBottonQueryClick"
             android:text="" />
 
@@ -84,8 +91,8 @@
             android:id="@+id/btnBottonMe"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginRight="35dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
             android:layout_weight="1"
             android:background="@drawable/user2"
             android:onClick="onBtnBottonMeClick"
@@ -94,13 +101,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
+        android:background="#ffffff"
         android:gravity="top"
-        android:layout_height="30dp">
+        android:layout_height="20dp">
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="20dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:textAlignment="center"
             android:text="首页"
             />
@@ -108,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="20dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:textAlignment="center"
             android:text="设备"
             />
@@ -116,7 +124,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="20dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:textAlignment="center"
             android:text="地图"
             />
@@ -124,8 +132,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="20dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginRight="35dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
             android:textAlignment="center"
             android:text="我的"
             />

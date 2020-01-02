@@ -31,22 +31,22 @@
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btnMainLogin"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/setting"
-            android:text="" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnMainLogin"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:background="@drawable/setting"-->
+<!--            android:text="" />-->
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="center"
-            android:text="设置"
-            android:textSize="12dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:text="设置"-->
+<!--            android:textSize="12dp" />-->
     </LinearLayout>
 
     <View

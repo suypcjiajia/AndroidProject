@@ -13,7 +13,7 @@
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/itemOnline"
+        android:id="@+id/itemMaching"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -21,7 +21,7 @@
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/itemDiskUse"
+        android:id="@+id/itemKong"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -29,18 +29,11 @@
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/itemException"
+        android:id="@+id/itemTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textAlignment="center"
         android:text="TextView" />
 
-    <TextView
-        android:id="@+id/itemCity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:text="TextView" />
 </LinearLayout>

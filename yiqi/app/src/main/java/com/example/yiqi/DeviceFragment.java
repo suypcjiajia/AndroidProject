@@ -24,7 +24,7 @@ import android.widget.TextView;
  */
 public class DeviceFragment extends Fragment implements View.OnClickListener {
 
-    View root;
+    View root = null;
 
     String str;
 
@@ -33,12 +33,27 @@ public class DeviceFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
+    public void switchPage(int who){
+        int page2 = View.VISIBLE;
+        int fragmentDevlist =View.INVISIBLE;
+        if( who == 1){
+            page2 = View.VISIBLE;
+            fragmentDevlist = View.INVISIBLE;
+        }else if( who == 2){
+            page2 = View.INVISIBLE;
+            fragmentDevlist = View.VISIBLE;
+        }
+        root.findViewById(R.id.page2).setVisibility(page2);
+        root.findViewById(R.id.fragmentDevlist).setVisibility(fragmentDevlist);
+    }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         root = inflater.inflate(R.layout.fragment_device, container, false);
 
         //  root.findViewById(R.id.bt24).setOnClickListener(this);

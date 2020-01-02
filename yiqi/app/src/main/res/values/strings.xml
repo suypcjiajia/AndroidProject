@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">yiqi</string>
+    <string name="app_name">迪尔物联</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">login</string>
     <string name="title_activity_main">main</string>
+    <string name="ok_title">确定</string>
+    <string name="cancel_title">取消</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

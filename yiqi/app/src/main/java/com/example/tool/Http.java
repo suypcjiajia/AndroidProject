@@ -98,11 +98,39 @@ public final class Http {
         }
     }
 
+    /**
+     * 获取血培养保阳列表（服务器按时间排序返回数据）
+     * @param date
+     * @return
+     */
     public static JsonObject bchistory(String date){
         try {
             JsonObject json = new JsonObject();
             json.addProperty("datetime", date);
             String response = sendPost("http://" + ipaddr + "/alert/get/bchistory", json.toString());
+            System.out.println(response);
+            JsonElement element = JsonParser.parseString(response);
+
+            JsonObject jsonRes =  element.getAsJsonObject();
+            return jsonRes;
+
+        }catch (IllegalStateException e){
+            return makeExpetion(e);
+        }
+    }
+
+    /**
+     * 获取区域下面的医院列表
+     * @param city
+     * @return
+     */
+    public static JsonObject getHospitalByCity(String province,String city,String country){
+        try {
+            JsonObject json = new JsonObject();
+            json.addProperty("Country", country);
+            json.addProperty("Province", province);
+            json.addProperty("City", city);
+            String response = sendPost("http://" + ipaddr + "/hospital/listbycity", json.toString());
             System.out.println(response);
             JsonElement element = JsonParser.parseString(response);
 
@@ -250,5 +278,12 @@ public final class Http {
         jsonRes.addProperty("status",e.getMessage());
         System.out.println( "Http:" + e.getMessage());
         return jsonRes;
+    }
+
+    public static  Boolean isSucess(JsonObject json){
+        return json.get("code").getAsInt() == 0 ;
+    }
+    public static  String getErrorMsg(JsonObject json){
+        return json.get("status").getAsString();
     }
 }

@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         AlertDialog alertDialog1 = new AlertDialog.Builder(this)
                 .setTitle(msg)//标题
                 .setMessage(msg)//内容
-                .setIcon(R.mipmap.ic_launcher)//图标
+                .setIcon(R.mipmap.app_icon)//图标
                 .create();
         alertDialog1.show();
     }
