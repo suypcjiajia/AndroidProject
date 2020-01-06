@@ -3,12 +3,14 @@ package com.example.yiqi;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -40,10 +42,12 @@ public class DevListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             public  void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 System.out.println("onItemClick:" + position + "," + id);
-                if( position == 0)
-                    ((MainActivity)getActivity()).toHospitaoPos("珠海市香洲区拱北粤华路208号","珠海第二人民医院");
-                else
-                    ((MainActivity)getActivity()).toHospitaoPos("珠海市金湾区金湖路与虹阳路交叉口","金湾中心医院");
+//                if( position == 0)
+//                    ((MainActivity)getActivity()).toHospitaoPos("珠海市香洲区拱北粤华路208号","珠海第二人民医院");
+//                else
+//                    ((MainActivity)getActivity()).toHospitaoPos("珠海市金湾区金湖路与虹阳路交叉口","金湾中心医院");
+                showBoard("24瓶面板");
+
             }
         });
 
@@ -75,6 +79,15 @@ public class DevListFragment extends Fragment {
 
         ListView list = root.findViewById(R.id.listViewDevlist);
         list.setAdapter(simpleAdapter);
+    }
+
+    private void showBoard(String msg){
+        LinearLayout pic  = (LinearLayout)getLayoutInflater().inflate(R.layout.dialog_board,null);
+        AlertDialog alertDialog1 = new AlertDialog.Builder(getContext())
+                .setTitle(msg)
+                .setView(pic)
+                .create();
+        alertDialog1.show();
     }
 
 }

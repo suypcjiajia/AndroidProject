@@ -110,13 +110,18 @@ public class HomeFragment extends Fragment {
     }
 
     public  void setOnLineTxt(String e1,String e2){
+        if( fragment_home == null){
+            return;
+        }
         if( e1 != null) {
             TextView t = fragment_home.findViewById(R.id.textViewOnline2);
-            t.setText(e1);
+            if( t != null)
+                t.setText(e1);
         }
         if( e2 != null) {
             TextView t2 = fragment_home.findViewById(R.id.textViewOnline3);
-            t2.setText(e2);
+            if( t2  != null)
+                t2.setText(e2);
         }
     }
 

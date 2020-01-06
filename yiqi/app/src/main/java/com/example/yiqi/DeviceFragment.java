@@ -43,8 +43,15 @@ public class DeviceFragment extends Fragment implements View.OnClickListener {
             page2 = View.INVISIBLE;
             fragmentDevlist = View.VISIBLE;
         }
-        root.findViewById(R.id.page2).setVisibility(page2);
-        root.findViewById(R.id.fragmentDevlist).setVisibility(fragmentDevlist);
+
+        View v = root.findViewById(R.id.page2);
+        if( v != null) {
+            v.setVisibility(page2);
+        }
+        v = root.findViewById(R.id.fragmentDevlist);
+        if( v != null) {
+            v.setVisibility(fragmentDevlist);
+        }
     }
 
 

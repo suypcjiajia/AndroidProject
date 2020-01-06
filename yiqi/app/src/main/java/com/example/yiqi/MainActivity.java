@@ -58,6 +58,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -80,11 +82,14 @@ public class MainActivity extends AppCompatActivity {
 
     androidx.viewpager.widget.ViewPager viewPager;
 
+    Boolean mStop = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        mStop = false;
 
 
 
@@ -109,20 +114,24 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(viewAdapter);
         viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(onPageChangeListener);
+        viewPager.setCurrentItem(0);
 
         setBottonHomeButton();
 
 
-        thread.start();
+
 
         //启动服务
         Intent serintent = new Intent(this,MyService.class);
         startService(serintent);
 
+
         //判断该app是否打开了通知，如果没有的话就打开手机设置页面
         NotificationUtil notiUtil = new NotificationUtil();
         notiUtil.openNotificationSetting(this);
 
+
+        thread.start();
 
         System.out.println("MainActivity onCreate");
 
@@ -131,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+        mStop = false;
         Intent intent = getIntent();
 
 
@@ -163,30 +173,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRestart(){
         super.onRestart();
+        mStop = false;
         System.out.println("MainActivity onRestart");
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        mStop = false;
         System.out.println("MainActivity onResume");
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        mStop = true;
         System.out.println("MainActivity onPause");
     }
 
     @Override
     public void onStop(){
         super.onStop();
+        mStop = true;
         System.out.println("MainActivity onStop");
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
+        mStop = true;
         System.out.println("MainActivity onDestroy");
     }
 
@@ -300,6 +315,15 @@ public class MainActivity extends AppCompatActivity {
 
             while(true) {
 
+                if( mStop){
+                    try {
+                        sleep(1000);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage()  );
+                    }
+                    continue;
+                }
+
                 try {
                     if( loops == 0) {
                         httpOnlinesummary();
@@ -355,6 +379,9 @@ public class MainActivity extends AppCompatActivity {
 
         List<PieEntry> strings = new ArrayList<>();
         JsonObject json = Http.onlinesummary();
+        if( mStop){
+            return;
+        }
         if (json.get("code").getAsInt() == 0) {
             String online_count = json.get("online_count").getAsString();
             String count = json.get("count").getAsString();
@@ -370,6 +397,8 @@ public class MainActivity extends AppCompatActivity {
             strings.add(new PieEntry(  0,""));
         }
         onlinePieEntry = strings;
+
+
         mHandler.sendEmptyMessage(22);
 
 
@@ -379,6 +408,9 @@ public class MainActivity extends AppCompatActivity {
 
         List<PieEntry> strings = new ArrayList<>();
         JsonObject json = Http.exceptionsummary();
+        if( mStop){
+            return;
+        }
         if (json.get("code").getAsInt() == 0) {
             String exception_count = json.get("exception_count").getAsString();
             String count = json.get("count").getAsString();
@@ -395,6 +427,7 @@ public class MainActivity extends AppCompatActivity {
         }
         exceptionPieEntry = strings;
 
+
         mHandler.sendEmptyMessage(23);
 
     }
@@ -403,6 +436,9 @@ public class MainActivity extends AppCompatActivity {
 
         List<PieEntry> strings = new ArrayList<>();
         JsonObject json = Http.alldisksummary();
+        if( mStop){
+            return;
+        }
         if (json.get("code").getAsInt() == 0) {
             String available = json.get("available").getAsString() ;
             String total =  json.get("total").getAsString();
@@ -416,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
             strings.add(new PieEntry(  0,""));
         }
         diskPieEntry = strings;
+
         mHandler.sendEmptyMessage(24);
 
 
@@ -424,9 +461,12 @@ public class MainActivity extends AppCompatActivity {
     private void httpBaoyang(){
 
         JsonObject json = Http.bchistory("2020-01-01");
-
+        if( mStop){
+            return;
+        }
         if (json.get("code").getAsInt() == 0){
             mBaoYangs = json.get("lists").getAsJsonArray();
+
 
             mHandler.sendEmptyMessage(21);
 

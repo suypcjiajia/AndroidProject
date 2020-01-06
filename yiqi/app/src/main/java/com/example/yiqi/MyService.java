@@ -15,12 +15,18 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import androidx.core.app.NotificationCompat;
+
 import com.example.tool.WsClient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import static android.os.PowerManager.SCREEN_BRIGHT_WAKE_LOCK;
+
 public class MyService extends Service {
+
+    private final static int NOTIFICATION_ID = android.os.Process.myPid();
 
     private WsClient mWsClient;
     private NotificationManager notificationMg ;
@@ -48,7 +54,9 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent,int flags,int startId){
         System.out.println("MyService onStartCommand");
+        //startForeground(NOTIFICATION_ID,getForegroudNotification());
         return super.onStartCommand(intent,flags,startId);
+
 
     }
 
@@ -125,7 +133,7 @@ public class MyService extends Service {
 
 
         noti.defaults = Notification.DEFAULT_ALL; //震动,加提示音
-        notificationMg.notify(1,noti);//管理者发送通知,数字代表标识
+        notificationMg.notify(888,noti);//管理者发送通知,数字代表标识
 
         wakeUpAndUnlock();
 
@@ -145,9 +153,30 @@ public class MyService extends Service {
             // 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
 
 
-            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP    , ":bright");
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK    , ":bright");
             wl.acquire(10000); // 点亮屏幕
             wl.release(); // 释放
         }
     }
+
+    private Notification getForegroudNotification()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
+                .setContentTitle("服务运行于前台")
+                .setContentText("service被设为前台进程")
+                .setTicker("service正在后台运行...")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setWhen(System.currentTimeMillis())
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentIntent(pendingIntent);
+        Notification notification = builder.build();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        System.out.println("getForegroudNotification");
+        return notification;
+    }
+
+
 }
