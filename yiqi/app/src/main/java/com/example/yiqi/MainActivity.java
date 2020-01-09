@@ -39,6 +39,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
@@ -51,7 +52,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStop(){
         super.onStop();
         mStop = true;
+        WriteLog(this,"MainActivity onStop");
         System.out.println("MainActivity onStop");
     }
 
@@ -202,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         mStop = true;
+        WriteLog(this,"MainActivity onDestroy");
         System.out.println("MainActivity onDestroy");
     }
 
@@ -502,4 +509,34 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
+
+    public void WriteLog(Context context,String msg){
+        try {
+            File sdPath = Environment.getExternalStorageDirectory();
+            if (!sdPath.exists()) {
+                Toast.makeText(context,"不存在SD卡目录", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            File myfile = new File(sdPath, "log.txt");
+            if( !myfile.exists()) {
+                myfile.createNewFile();
+            }
+            System.out.println("文件名：" + myfile.getName());
+            System.out.println("路径：" + myfile.getAbsolutePath());
+
+
+
+            FileOutputStream fos = new FileOutputStream(myfile);
+            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+            osw.write(msg);
+            osw.flush();
+            fos.flush();  //输出缓冲区中所有的内容
+            osw.close();
+            fos.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

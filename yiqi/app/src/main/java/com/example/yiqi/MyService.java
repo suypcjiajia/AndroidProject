@@ -84,7 +84,7 @@ public class MyService extends Service {
             if( type.equals("BloodCultureAlert")){
                 String   machineID = jmsg.get("machineID").getAsString();
                 String   extensionNum = jmsg.get("extensionNum").getAsString();
-                String   holeNum = jmsg.get("holeNum").getAsString();
+                String   holeNum = String.valueOf(jmsg.get("holeNum").getAsInt() +1);
                 strShow = "设备号:"  + machineID + "分机号:" +  extensionNum +  "孔号:" + holeNum;
             }
 
