@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/button"
+        android:layout_width="@dimen/kongsize"
+        android:layout_height="@dimen/kongsize"
+        android:background="@drawable/button_circle_shape"
+        android:text="" />
+
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/button2"
+        android:layout_width="@dimen/kongsize"
+        android:layout_height="@dimen/kongsize"
+        android:background="@drawable/button_circle_shape2"
+        android:textAlignment="center"
+        android:text="+" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/button3"
+        android:layout_width="@dimen/kongsize"
+        android:layout_height="@dimen/kongsize"
+        android:background="@drawable/button_circle_shape3"
+        android:textAlignment="center"
+        android:text="-" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/button4"
+        android:layout_width="@dimen/kongsize"
+        android:layout_height="@dimen/kongsize"
+        android:background="@drawable/button_circle_shape4"
+        android:textAlignment="center"
+        android:text="+" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/button5"
+        android:layout_width="@dimen/kongsize"
+        android:layout_height="@dimen/kongsize"
+        android:background="@drawable/button_circle_shape5"
+        android:textAlignment="center"
+        android:text="-" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="6" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+</LinearLayout>

@@ -1,0 +1,1 @@
+这个文件是为了让layout目录下的mycompnent目录显示出来。
