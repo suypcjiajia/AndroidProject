@@ -1,6 +1,7 @@
 package com.example.bloodculture;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -26,6 +28,7 @@ import java.util.Map;
 public class FragmentDevice extends Fragment {
 
     View root;
+    ListView listView ;
     public FragmentDevice() {
         // Required empty public constructor
     }
@@ -36,10 +39,12 @@ public class FragmentDevice extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root =  inflater.inflate(R.layout.fragment_device, container, false);
+        listView = root.findViewById(R.id.listViewDevice);
+        listView.setOnItemClickListener(onItemClickListener);
         return root;
     }
 
-    public void setBaoYangList(JsonArray array){
+    public void setDeviceList(JsonArray array){
 
         List<Map<String,Object>> items = new ArrayList<>();
 
@@ -47,8 +52,8 @@ public class FragmentDevice extends Fragment {
             JsonObject an = array.get(i).getAsJsonObject();
 
             Map<String,Object> item = new HashMap<>();
-            item.put("item1",an.get("item1").getAsString());
-            item.put("item2",an.get("item2").getAsString());
+            item.put("item1",an.get("type").getAsString());
+            item.put("item2",an.get("name").getAsString());
             items.add(item);
 
         }
@@ -58,9 +63,16 @@ public class FragmentDevice extends Fragment {
                 new String[]{"item1","item2"},
                 new int[]{R.id.item1,R.id.item2});
 
-        ListView list = root.findViewById(R.id.listViewDevice);
-        list.setAdapter(simpleAdapter);
+
+        listView.setAdapter(simpleAdapter);
     }
+
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+            Intent intent = new Intent(getContext(), ActivityBoard.class);
+            startActivity(intent);
+        }
+    };
 
 
 }

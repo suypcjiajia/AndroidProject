@@ -1,6 +1,7 @@
 package com.example.bloodculture;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -26,6 +28,9 @@ import com.google.gson.JsonObject;
 public class FragmentBaoyang extends Fragment {
 
     View root;
+    ListView listView ;
+
+    JsonArray mBaoyangData;
 
     public FragmentBaoyang() {
         // Required empty public constructor
@@ -37,12 +42,15 @@ public class FragmentBaoyang extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root=  inflater.inflate(R.layout.fragment_baoyang, container, false);
+        listView = root.findViewById(R.id.listViewBaoyang);
+        listView.setOnItemClickListener(onItemClickListener);
         return root;
     }
 
     public void setBaoYangList(JsonArray array){
 
         List<Map<String,Object>> items = new ArrayList<>();
+        mBaoyangData = array;
 
         for( int i = 0; i < array.size(); i ++){
             JsonObject an = array.get(i).getAsJsonObject();
@@ -61,8 +69,20 @@ public class FragmentBaoyang extends Fragment {
                 new String[]{"name","maching","kong","time"},
                 new int[]{R.id.itemName,R.id.itemMaching,R.id.itemKong,R.id.itemTime});
 
-        ListView list = root.findViewById(R.id.listViewBaoyang);
-        list.setAdapter(simpleAdapter);
+        listView.setAdapter(simpleAdapter);
     }
+
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+            JsonObject elem = mBaoyangData.get(position).getAsJsonObject();
+
+            Intent intent = new Intent(getContext(), ActivityBoard.class);
+            intent.putExtra("MachineID",elem.get("MachineID").getAsString());
+            intent.putExtra("ExtensionNum",elem.get("ExtensionNum").getAsString());
+
+
+            startActivity(intent);
+        }
+    };
 
 }

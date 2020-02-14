@@ -7,10 +7,11 @@
     android:orientation="vertical"
     tools:context=".ActivityBoard">
 
-    <include layout="@layout/include_top" />
+    <include layout="@layout/include_top"
+        android:id="@+id/board_top"/>
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textViewFenji"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -18,54 +19,64 @@
         android:layout_marginRight="30dp"
         android:textAlignment="center"
         android:background="@color/colorGray2"
-        android:text="分机1" />
+        android:text="分机" />
 
 
     <include layout="@layout/include_line_circle"
+        android:id="@+id/board_holenums"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"/>
 
 
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </TableLayout>
-
-    <LinearLayout
+    <GridLayout
+        android:id="@+id/gridLayoutBottle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"></LinearLayout>
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        >
 
-    <Button
+    </GridLayout>
+
+
+    <ImageButton
         android:id="@+id/button6"
         android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bottle_tips"
+        android:text="" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择分机:" />
 
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:background="@color/colorGray4"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -79,6 +90,7 @@
             android:id="@+id/imageButton2"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:onClick="onBtnGrowCurveClick"
             android:background="@drawable/btn_grow_curve" />
 
         <Space
@@ -90,6 +102,7 @@
             android:id="@+id/imageButton3"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:onClick="onBtnPepoleClick"
             android:background="@drawable/btn_pepoleinfo" />
 
         <Space

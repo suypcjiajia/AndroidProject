@@ -13,31 +13,12 @@
         android:id="@+id/button"
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
-        android:background="@drawable/button_circle_shape"
+        android:background="@drawable/button_circle_shape_culture"
         android:text="" />
 
 
     <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2" />
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/button2"
-        android:layout_width="@dimen/kongsize"
-        android:layout_height="@dimen/kongsize"
-        android:background="@drawable/button_circle_shape2"
-        android:textAlignment="center"
-        android:text="+" />
-
-    <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textViewCulture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0" />
@@ -48,18 +29,37 @@
         android:layout_weight="1" />
 
     <TextView
+        android:id="@+id/button2"
+        android:layout_width="@dimen/kongsize"
+        android:layout_height="@dimen/kongsize"
+        android:background="@drawable/button_circle_shape_positive"
+        android:textAlignment="center"
+        android:text="+" />
+
+    <TextView
+        android:id="@+id/textViewPositive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" " />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
         android:id="@+id/button3"
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
-        android:background="@drawable/button_circle_shape3"
+        android:background="@drawable/button_circle_shape_negative"
         android:textAlignment="center"
         android:text="-" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/textViewNegative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5" />
+        android:text=" " />
 
     <Space
         android:layout_width="wrap_content"
@@ -70,15 +70,15 @@
         android:id="@+id/button4"
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
-        android:background="@drawable/button_circle_shape4"
+        android:background="@drawable/button_circle_shape_anopositive"
         android:textAlignment="center"
         android:text="+" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/textViewAnoPositive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="8" />
+        android:text=" " />
 
     <Space
         android:layout_width="wrap_content"
@@ -89,15 +89,15 @@
         android:id="@+id/button5"
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
-        android:background="@drawable/button_circle_shape5"
+        android:background="@drawable/button_circle_shape_anonegative"
         android:textAlignment="center"
         android:text="-" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/textViewAnoNegative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="6" />
+        android:text=" " />
 
     <Space
         android:layout_width="wrap_content"

@@ -7,7 +7,8 @@
     android:orientation="vertical"
     tools:context=".ActivityPepole">
 
-    <include layout="@layout/include_top"/>
+    <include layout="@layout/include_top"
+        android:id="@+id/top_in_pepole"/>
 
     <LinearLayout
         android:layout_width="match_parent"

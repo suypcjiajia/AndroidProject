@@ -25,7 +25,8 @@
             android:id="@+id/imageViewBaoyang"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:srcCompat="@drawable/baoyang_button1" />
+            android:onClick="onBtnBottonBaoyangClick"
+            android:background="@drawable/baoyang_button1" />
 
         <Space
             android:layout_width="40dp"
@@ -35,7 +36,8 @@
             android:id="@+id/imageViewDevice"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:srcCompat="@drawable/device_button1" />
+            android:onClick="onBtnBottonDeviceClick"
+            android:background="@drawable/device_button1" />
 
     </LinearLayout>
 
