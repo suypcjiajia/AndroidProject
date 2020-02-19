@@ -21,9 +21,13 @@ import com.google.gson.JsonObject;
 
 public class ActivityBoard extends AppCompatActivity {
 
-    JsonArray mHoleSummary;//瓶孔预览
-    MyThread thread = new MyThread();
+    JsonArray mHoleSummary;//瓶孔预览(从服务器拿的数据，有可能是空的，也有可能不全)
+    MyThread thread ;//线程任务：从服务器获取瓶孔预览
+    String currentholeNum;//用户选了哪一个瓶子
+    int mHoleCount;//面板共有多少瓶子
 
+
+    View viewTop;
     TextView textViewCulture;
     TextView textViewPositive;
     TextView textViewNegative;
@@ -34,9 +38,10 @@ public class ActivityBoard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("ActivityBoard onCreate");
         setContentView(R.layout.activity_board);
 
-        View viewTop = findViewById(R.id.board_top);
+        viewTop = findViewById(R.id.board_top);
         ImageButton back = viewTop.findViewById(R.id.back);
         back.setOnClickListener(onBtnBackClickListener);
 
@@ -48,76 +53,133 @@ public class ActivityBoard extends AppCompatActivity {
         textViewAnoNegative = viewHole.findViewById(R.id.textViewAnoNegative);
 
         mSpinner = findViewById(R.id.spinner);
-        String[] arry = {"0","1","2"};
+        String[] arry = {"分机0", "分机1", "分机2"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
-                (this,android.R.layout.simple_spinner_item,arry);
+                (this, android.R.layout.simple_spinner_item, arry);
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setOnItemSelectedListener(onItemSelectedListener);
 
-        thread.open();
-        thread.start();
+
 
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         System.out.println("ActivityBoard onStart");
+
+        thread = new MyThread();
+
         Intent intent = getIntent();
         thread.machineID = intent.getStringExtra("MachineID");
         thread.extensionNum = intent.getStringExtra("ExtensionNum");
         System.out.println("ActivityBoard machineID:" + thread.machineID + " ExtensionNum:" + thread.extensionNum);
-        ((TextView)findViewById(R.id.textViewFenji)).setText( "分机" + thread.extensionNum);
+
+        mSpinner.setSelection(Integer.parseInt(thread.extensionNum));
+
+        String type = intent.getStringExtra("type");
+        if (type.isEmpty()) {
+            type = "Bt";
+            mHoleCount = 64;
+        } else {
+            if (type.length() < 4) {
+                mHoleCount = 64;
+            } else
+                mHoleCount = Integer.parseInt(type.substring(2));
+        }
+        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(type);
+
+        System.out.println("ActivityBoard mHoleCount:" + mHoleCount);
+
+
+        thread.start();
+
 
     }
 
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         System.out.println("ActivityBoard onRestart");
-        thread.open();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         System.out.println("ActivityBoard onResume");
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         System.out.println("ActivityBoard onPause");
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         System.out.println("ActivityBoard onStop");
-        thread.close();
     }
 
-    public void onBtnGrowCurveClick(View v){
+    public void onBtnGrowCurveClick(View v) {
         Intent intent = new Intent(this, ActivityGrowCurve.class);
-        intent.putExtra("machineID",thread.machineID);
-        intent.putExtra("extensionNum",thread.extensionNum);
-        intent.putExtra("machineID","0");
+        intent.putExtra("MachineID", thread.machineID);
+        intent.putExtra("ExtensionNum", thread.extensionNum);
+        intent.putExtra("HoleNum", currentholeNum);
 
         startActivity(intent);
     }
 
-    public void onBtnPepoleClick(View v){
+    public void onBtnPepoleClick(View v) {
         Intent intent = new Intent(this, ActivityPepole.class);
         startActivity(intent);
     }
 
-    private void makeBoard(){
-
-        int nums = mHoleSummary.size();
+    private void initBoard() {
         GridLayout gridLayout = findViewById(R.id.gridLayoutBottle);
         gridLayout.removeAllViews();
         int gridWidth = gridLayout.getWidth();
+        System.out.println("GridLayout width:" + gridWidth);
+        int columnCount = 10;
+        int rowCount = mHoleCount % columnCount == 0 ? mHoleCount / 10 : mHoleCount / 10 + 1;
+        gridLayout.setColumnCount(columnCount);
+        gridLayout.setRowCount(rowCount);
+        int holeWidth = gridWidth / columnCount;
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < columnCount; j++) {
+                if (i * columnCount + j + 1 > mHoleCount) {
+                    break;
+                }
+                GridLayout.Spec rowSpec = GridLayout.spec(i);
+                GridLayout.Spec cloumnSpec = GridLayout.spec(j);
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, cloumnSpec);
+
+                params.width = holeWidth/5*4;
+                params.height = params.width;
+                int margin = (holeWidth - params.width) / 2;
+                params.setMargins(margin, margin, margin, margin);
+                TextView view = new TextView(this);
+                view.setId(10000 + i * columnCount + j);
+                view.setText(String.valueOf(i * columnCount + j));
+                view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                view.setBackgroundResource(R.drawable.button_circle_shape_empty);//初始化成空瓶
+
+                gridLayout.addView(view, params);
+                view.setOnClickListener(onHoleClick);
+            }
+        }
+        textViewCulture.setText(String.valueOf(0));
+        textViewPositive.setText(String.valueOf(0));
+        textViewNegative.setText(String.valueOf(0));
+        textViewAnoPositive.setText(String.valueOf(0));
+        textViewAnoNegative.setText(String.valueOf(0));
+    }
+
+    private void updateHoleState() {
+
+        int nums = mHoleSummary.size();
+        GridLayout gridLayout = findViewById(R.id.gridLayoutBottle);
 
         int cultureNum = 0;
         int positiveNum = 0;
@@ -125,57 +187,46 @@ public class ActivityBoard extends AppCompatActivity {
         int anopositiveNum = 0;
         int anonegativeNum = 0;
 
-        int columnCount = 10;
-        int rowCount = nums%columnCount==0 ? nums/10:nums/10+1;
-        gridLayout.setColumnCount(columnCount);
-        gridLayout.setRowCount(rowCount);
-        int holeWidth = gridWidth/columnCount;
-        for( int i = 0 ; i < rowCount ; i++){
-            for( int j = 0; j < columnCount ; j++){
-                if( i*columnCount + j + 1 > nums){
-                    break;
-                }
-                GridLayout.Spec rowSpec = GridLayout.spec(i);
-                GridLayout.Spec cloumnSpec = GridLayout.spec(j);
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec,cloumnSpec);
 
-                params.width = 50;
-                params.height = 50;
-                int margin = (holeWidth - 50)/2;
-                params.setMargins(margin,margin,margin,margin);
-                TextView view = new TextView(this);
-                JsonObject hole = mHoleSummary.get(i*columnCount + j).getAsJsonObject();
+        for (int i = 0; i < nums; i++) {
 
-                view.setText(hole.get("HoleNum").getAsString());
-                view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                int state = hole.get("CurrentState").getAsInt();
-                if( state == HoleState.hole_invalid){
-                    view.setBackgroundResource(R.drawable.button_circle_shape_invalid);
+            JsonObject hole = mHoleSummary.get(i).getAsJsonObject();
 
-                }else if( state == HoleState.hole_empty){
-                    view.setBackgroundResource(R.drawable.button_circle_shape_empty);
-                }else if( state == HoleState.hole_culture){
-                    view.setBackgroundResource(R.drawable.button_circle_shape_culture);
-                    cultureNum++;
-                }else if( state == HoleState.hole_positive){
-                    view.setBackgroundResource(R.drawable.button_circle_shape_positive);
-                    positiveNum++;
-                }else if( state == HoleState.hole_negative){
-                    view.setBackgroundResource(R.drawable.button_circle_shape_negative);
-                    negativeNum++;
-                }else if( state == HoleState.hole_anoposivive){
-                    view.setBackgroundResource(R.drawable.button_circle_shape_anopositive);
-                    anopositiveNum++;
-                }else if( state == HoleState.hole_anonegative){
-                    view.setBackgroundResource(R.drawable.button_circle_shape_anonegative);
-                    anonegativeNum++;
-                }
+            int HoleNum = hole.get("HoleNum").getAsInt();
+            if (HoleNum + 1 > mHoleCount) {
+                continue;
+            }
 
-                gridLayout.addView(view,params);
+            TextView view = gridLayout.findViewById(10000 + HoleNum);
+            if (view == null) {
+                continue;
+            }
 
-                view.setOnClickListener(onHoleClick);
+            int state = hole.get("CurrentState").getAsInt();
+            if (state == HoleState.hole_invalid) {
+                view.setBackgroundResource(R.drawable.button_circle_shape_invalid);
+
+            } else if (state == HoleState.hole_empty) {
+                view.setBackgroundResource(R.drawable.button_circle_shape_empty);
+            } else if (state == HoleState.hole_culture) {
+                view.setBackgroundResource(R.drawable.button_circle_shape_culture);
+                cultureNum++;
+            } else if (state == HoleState.hole_positive) {
+                view.setBackgroundResource(R.drawable.button_circle_shape_positive);
+                positiveNum++;
+            } else if (state == HoleState.hole_negative) {
+                view.setBackgroundResource(R.drawable.button_circle_shape_negative);
+                negativeNum++;
+            } else if (state == HoleState.hole_anoposivive) {
+                view.setBackgroundResource(R.drawable.button_circle_shape_anopositive);
+                anopositiveNum++;
+            } else if (state == HoleState.hole_anonegative) {
+                view.setBackgroundResource(R.drawable.button_circle_shape_anonegative);
+                anonegativeNum++;
             }
         }
+
+
         textViewCulture.setText(String.valueOf(cultureNum));
         textViewPositive.setText(String.valueOf(positiveNum));
         textViewNegative.setText(String.valueOf(negativeNum));
@@ -184,67 +235,56 @@ public class ActivityBoard extends AppCompatActivity {
 
     }
 
-    private void httpHoleSummary(String machineID,String extensionNum){
+    private void httpHoleSummary(String machineID, String extensionNum) {
 
         //JsonObject json = Http.getHoleSummary("bt-64-No.1","0");
-        JsonObject json = Http.getHoleSummary(machineID,extensionNum);
+        JsonObject json = Http.getHoleSummary(machineID, extensionNum);
 
-        if (json.get("code").getAsInt() == 0){
+        if (json.get("code").getAsInt() == 0) {
             mHoleSummary = json.get("lists").getAsJsonArray();
-            System.out.println("httpHoleSummary:" + mHoleSummary.toString());
             mHandler.sendEmptyMessage(30);
+        } else {
+            mHandler.sendEmptyMessage(31);
         }
     }
 
 
-    View.OnClickListener onBtnBackClickListener =  new  View.OnClickListener() {
+    View.OnClickListener onBtnBackClickListener = new View.OnClickListener() {
         /**
          * Called when a view has been clicked.
          *
          * @param v The view that was clicked.
          */
-        public void onClick(View v){
+        public void onClick(View v) {
             Intent intent = new Intent(ActivityBoard.this, ActivityMain.class);
             startActivity(intent);
         }
     };
 
 
+    class MyThread extends Thread {
 
-    class MyThread extends Thread
-    {
-        Boolean closed = false;
-        public  String machineID;
-        public  String extensionNum;
+        public String machineID;
+        public String extensionNum;
 
-        public  void close(){
-            closed = true;
-        }
-        public  void open(){
-            closed = false;
-        }
+
         public void run() {
-            while (true) {
 
-                if( closed){
-                    continue;
-                }
+            System.out.println("ActivityBoard tread run");
 
 
-                try {
-                    httpHoleSummary(machineID,extensionNum);
-                    sleep(2000);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-                try {
-
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-
-
+            try {
+                httpHoleSummary(machineID, extensionNum);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
+            try {
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+
         }
     }
 
@@ -253,27 +293,31 @@ public class ActivityBoard extends AppCompatActivity {
         public boolean handleMessage(@NonNull Message msg) {
 
             if (msg.what == 30) {
-                makeBoard();
+                initBoard();
+
+                updateHoleState();
+            } else if (msg.what == 31) {
+                initBoard();
             }
             return true;
         }
     });
 
-     AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener(){
+    AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
 
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         }
 
-        public void onNothingSelected(AdapterView<?> parent){
+        public void onNothingSelected(AdapterView<?> parent) {
 
         }
     };
 
 
-    View.OnClickListener onHoleClick = new View.OnClickListener(){
-        public void onClick(View v){
-            String holeNum = ((TextView) v).getText().toString();
+    View.OnClickListener onHoleClick = new View.OnClickListener() {
+        public void onClick(View v) {
+            currentholeNum = ((TextView) v).getText().toString();
         }
     };
 

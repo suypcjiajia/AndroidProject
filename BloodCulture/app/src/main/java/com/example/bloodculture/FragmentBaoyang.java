@@ -14,10 +14,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.tool.TimeUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -65,7 +67,7 @@ public class FragmentBaoyang extends Fragment {
         }
 
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(),items,R.layout.simple_item_baoyang,
+        MyListViewAdapter simpleAdapter = new MyListViewAdapter(getActivity(),items,R.layout.simple_item_baoyang,
                 new String[]{"name","maching","kong","time"},
                 new int[]{R.id.itemName,R.id.itemMaching,R.id.itemKong,R.id.itemTime});
 
@@ -79,6 +81,7 @@ public class FragmentBaoyang extends Fragment {
             Intent intent = new Intent(getContext(), ActivityBoard.class);
             intent.putExtra("MachineID",elem.get("MachineID").getAsString());
             intent.putExtra("ExtensionNum",elem.get("ExtensionNum").getAsString());
+            intent.putExtra("type",elem.get("type").getAsString());
 
 
             startActivity(intent);

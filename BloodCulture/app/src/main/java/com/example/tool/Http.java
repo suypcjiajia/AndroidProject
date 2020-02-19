@@ -32,8 +32,9 @@ public final class Http {
             JsonObject json = new JsonObject();
             json.addProperty("name", name);
             json.addProperty("password",  Encrypt.md5(pwd));
+            System.out.println(  "Http login call");
             String response = sendPost("http://" + ipaddr + "/user/login", json.toString());
-            System.out.println(response);
+            System.out.println(  "Http login request:" +  json.toString()  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -50,8 +51,9 @@ public final class Http {
      */
     public static JsonObject onlinesummary(){
         try {
+            System.out.println(  "Http onlinesummary call");
             String response = sendPost("http://" + ipaddr + "/list/onlinesummary", "");
-            System.out.println(response);
+            System.out.println(  "Http onlinesummary request:" +  " "  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -68,8 +70,9 @@ public final class Http {
      */
     public static JsonObject exceptionsummary(){
         try {
+            System.out.println(  "Http exceptionsummary call");
             String response = sendPost("http://" + ipaddr + "/exception/summary", "");
-            System.out.println(response);
+            System.out.println(  "Http exceptionsummary request:" +  " "  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -86,8 +89,9 @@ public final class Http {
      */
     public static JsonObject alldisksummary(){
         try {
+            System.out.println(  "Http alldisksummary call");
             String response = sendPost("http://" + ipaddr + "/list/alldisksummary", "");
-            System.out.println(response);
+            System.out.println(  "Http alldisksummary request:" +  " "  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -107,8 +111,9 @@ public final class Http {
         try {
             JsonObject json = new JsonObject();
             json.addProperty("datetime", date);
+            System.out.println(  "Http bchistory call");
             String response = sendPost("http://" + ipaddr + "/alert/get/bchistory", json.toString());
-            System.out.println(response);
+            System.out.println(  "Http bchistory request:" +  json.toString()  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -130,8 +135,9 @@ public final class Http {
             json.addProperty("Country", country);
             json.addProperty("Province", province);
             json.addProperty("City", city);
+            System.out.println(  "Http getHospitalByCity call");
             String response = sendPost("http://" + ipaddr + "/hospital/listbycity", json.toString());
-            System.out.println(response);
+            System.out.println(  "Http getHospitalByCity request:" +  json.toString()  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -151,8 +157,9 @@ public final class Http {
         try {
             JsonObject json = new JsonObject();
             json.addProperty("type", type);
+            System.out.println(  "Http getDevicesByType call");
             String response = sendPost("http://" + ipaddr + "/list/listbytype", json.toString());
-            System.out.println(response);
+            System.out.println(  "Http getDevicesByType request:" +  json.toString()  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -175,8 +182,9 @@ public final class Http {
             JsonObject json = new JsonObject();
             json.addProperty("MachineID", machineID);
             json.addProperty("ExtensionNum", extensionNum);
+            System.out.println(  "Http getHoleSummary call");
             String response = sendPost("http://" + ipaddr + "/report/get/holesummary", json.toString());
-            System.out.println(response);
+            System.out.println(  "Http getHoleSummary request:" +  json.toString()  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();
@@ -192,21 +200,22 @@ public final class Http {
      * @param machineID
      * @param extensionNum
      * @param holeNum
-     * @param start
-     * @param end
+     * @param limit
      * @return
      */
-    public static JsonObject getHoleCurve(String machineID,String extensionNum,String holeNum,
-                                          String start,String end){
+    public static JsonObject getHoleCurve(String machineID,String extensionNum,String holeNum,int limit){
         try {
             JsonObject json = new JsonObject();
             json.addProperty("MachineID", machineID);
             json.addProperty("ExtensionNum", extensionNum);
             json.addProperty("HoleNum", holeNum);
-            json.addProperty("start", start);
-            json.addProperty("end", end);
+//            json.addProperty("MachineID", "010101");
+//            json.addProperty("ExtensionNum", "0");
+//            json.addProperty("HoleNum", "7");
+            json.addProperty("limit",limit);
+            System.out.println(  "Http getHoleCurve call");
             String response = sendPost("http://" + ipaddr + "/bc/get/process", json.toString());
-            System.out.println(response);
+            System.out.println(  "Http getHoleCurve request:" +  json.toString()  + " response:"  + response);
             JsonElement element = JsonParser.parseString(response);
 
             JsonObject jsonRes =  element.getAsJsonObject();

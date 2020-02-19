@@ -5,21 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     tools:context=".ActivityBoard">
 
     <include layout="@layout/include_top"
         android:id="@+id/board_top"/>
 
-    <TextView
-        android:id="@+id/textViewFenji"
+
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:textAlignment="center"
-        android:background="@color/colorGray2"
-        android:text="分机" />
+        android:background="@drawable/spinner"
+        android:textAlignment="center" />
 
 
     <include layout="@layout/include_line_circle"
@@ -44,34 +45,12 @@
 
     <ImageButton
         android:id="@+id/button6"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_width="320dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
         android:background="@drawable/bottle_tips"
         android:text="" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="30dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/editText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="选择分机:" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

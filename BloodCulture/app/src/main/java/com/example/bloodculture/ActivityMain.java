@@ -25,6 +25,8 @@ public class ActivityMain extends AppCompatActivity {
 
     JsonArray mBaoYangs;
     JsonArray mDevices;
+    Boolean  started = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,10 @@ public class ActivityMain extends AppCompatActivity {
 
         setBottonBaoyang();
 
-        thread.start();
+        if( !started) {
+            started = true;
+            thread.start();
+        }
     }
 
     public void onBtnBottonBaoyangClick(View v) {
@@ -86,11 +91,10 @@ public class ActivityMain extends AppCompatActivity {
 
     private void httpBaoyang(){
 
-        JsonObject json = Http.bchistory("2020-01-01");
+        JsonObject json = Http.bchistory("2020-02-16");
 
         if (json.get("code").getAsInt() == 0){
             mBaoYangs = json.get("lists").getAsJsonArray();
-            System.out.println("httpBaoyang:" + mBaoYangs.toString());
             mHandler.sendEmptyMessage(21);
         }
     }
@@ -101,7 +105,6 @@ public class ActivityMain extends AppCompatActivity {
 
         if (json.get("code").getAsInt() == 0){
             mDevices = json.get("lists").getAsJsonArray();
-            System.out.println("httpBloodDevices:" + mDevices.toString());
             mHandler.sendEmptyMessage(22);
         }
     }
@@ -132,7 +135,7 @@ public class ActivityMain extends AppCompatActivity {
 
 
                 try {
-                    sleep(2000);
+                    sleep(10000);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }

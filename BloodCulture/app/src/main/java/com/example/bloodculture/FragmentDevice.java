@@ -27,6 +27,7 @@ import java.util.Map;
  */
 public class FragmentDevice extends Fragment {
 
+    JsonArray mDeviceData;
     View root;
     ListView listView ;
     public FragmentDevice() {
@@ -46,6 +47,7 @@ public class FragmentDevice extends Fragment {
 
     public void setDeviceList(JsonArray array){
 
+        mDeviceData = array;
         List<Map<String,Object>> items = new ArrayList<>();
 
         for( int i = 0; i < array.size(); i ++){
@@ -69,7 +71,11 @@ public class FragmentDevice extends Fragment {
 
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+            JsonObject elem = mDeviceData.get(position).getAsJsonObject();
             Intent intent = new Intent(getContext(), ActivityBoard.class);
+            intent.putExtra("MachineID",elem.get("name").getAsString());
+            intent.putExtra("ExtensionNum","0");
+            intent.putExtra("type",elem.get("type").getAsString());
             startActivity(intent);
         }
     };
