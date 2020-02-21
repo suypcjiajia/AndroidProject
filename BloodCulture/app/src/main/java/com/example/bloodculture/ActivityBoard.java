@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.tool.Http;
+import com.example.tool.ShowTips;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -55,7 +57,7 @@ public class ActivityBoard extends AppCompatActivity {
         mSpinner = findViewById(R.id.spinner);
         String[] arry = {"分机0", "分机1", "分机2"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_spinner_item, arry);
+                (this, R.layout.simple_item_fenji, arry);
         mSpinner.setAdapter(arrayAdapter);
         mSpinner.setOnItemSelectedListener(onItemSelectedListener);
 
@@ -80,10 +82,10 @@ public class ActivityBoard extends AppCompatActivity {
         String type = intent.getStringExtra("type");
         if (type.isEmpty()) {
             type = "Bt";
-            mHoleCount = 64;
+            mHoleCount = 60;
         } else {
             if (type.length() < 4) {
-                mHoleCount = 64;
+                mHoleCount = 60;
             } else
                 mHoleCount = Integer.parseInt(type.substring(2));
         }
@@ -123,6 +125,10 @@ public class ActivityBoard extends AppCompatActivity {
     }
 
     public void onBtnGrowCurveClick(View v) {
+        if( currentholeNum == null  || currentholeNum.isEmpty()){
+            ShowTips.showMsg("先点击选择瓶子编号", this);
+            return;
+        }
         Intent intent = new Intent(this, ActivityGrowCurve.class);
         intent.putExtra("MachineID", thread.machineID);
         intent.putExtra("ExtensionNum", thread.extensionNum);
@@ -132,6 +138,10 @@ public class ActivityBoard extends AppCompatActivity {
     }
 
     public void onBtnPepoleClick(View v) {
+        if( currentholeNum == null   || currentholeNum.isEmpty()){
+            ShowTips.showMsg("先点击选择瓶子编号", this);
+            return;
+        }
         Intent intent = new Intent(this, ActivityPepole.class);
         startActivity(intent);
     }
@@ -141,8 +151,8 @@ public class ActivityBoard extends AppCompatActivity {
         gridLayout.removeAllViews();
         int gridWidth = gridLayout.getWidth();
         System.out.println("GridLayout width:" + gridWidth);
-        int columnCount = 10;
-        int rowCount = mHoleCount % columnCount == 0 ? mHoleCount / 10 : mHoleCount / 10 + 1;
+        int columnCount = 6;
+        int rowCount = mHoleCount % columnCount == 0 ? mHoleCount / columnCount : mHoleCount / columnCount + 1;
         gridLayout.setColumnCount(columnCount);
         gridLayout.setRowCount(rowCount);
         int holeWidth = gridWidth / columnCount;
@@ -155,14 +165,15 @@ public class ActivityBoard extends AppCompatActivity {
                 GridLayout.Spec cloumnSpec = GridLayout.spec(j);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, cloumnSpec);
 
-                params.width = holeWidth/5*4;
+                params.width = holeWidth/2;
                 params.height = params.width;
                 int margin = (holeWidth - params.width) / 2;
-                params.setMargins(margin, margin, margin, margin);
+                params.setMargins(margin, margin/3, margin, margin/3);
                 TextView view = new TextView(this);
-                view.setId(10000 + i * columnCount + j);
-                view.setText(String.valueOf(i * columnCount + j));
+                view.setId(10000 + i * columnCount + j );
+                view.setText(String.valueOf(i * columnCount + j + 1));
                 view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                view.setGravity(Gravity.CENTER_VERTICAL);
                 view.setBackgroundResource(R.drawable.button_circle_shape_empty);//初始化成空瓶
 
                 gridLayout.addView(view, params);
@@ -242,9 +253,9 @@ public class ActivityBoard extends AppCompatActivity {
 
         if (json.get("code").getAsInt() == 0) {
             mHoleSummary = json.get("lists").getAsJsonArray();
-            mHandler.sendEmptyMessage(30);
+            mHandler.sendEmptyMessage(HandleWhat.getHoleSummary);
         } else {
-            mHandler.sendEmptyMessage(31);
+            mHandler.sendEmptyMessage(HandleWhat.getGetHoleSummaryError);
         }
     }
 
@@ -292,11 +303,11 @@ public class ActivityBoard extends AppCompatActivity {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
 
-            if (msg.what == 30) {
+            if (msg.what == HandleWhat.getHoleSummary) {
                 initBoard();
 
                 updateHoleState();
-            } else if (msg.what == 31) {
+            } else if (msg.what == HandleWhat.getGetHoleSummaryError) {
                 initBoard();
             }
             return true;

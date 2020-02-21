@@ -20,7 +20,9 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/spinner"
+        android:textColor="@color/colorOrange"
         android:textAlignment="center" />
+
 
 
     <include layout="@layout/include_line_circle"
@@ -49,6 +51,7 @@
         android:layout_height="32dp"
         android:layout_gravity="center"
         android:background="@drawable/bottle_tips"
+
         android:text="" />
 
 

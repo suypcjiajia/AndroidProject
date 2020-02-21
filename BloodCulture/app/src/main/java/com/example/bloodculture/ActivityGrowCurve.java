@@ -190,7 +190,7 @@ public class ActivityGrowCurve extends AppCompatActivity {
 
         if (json.get("code").getAsInt() == 0) {
             mHoleCurve = json.get("lists").getAsJsonArray();
-            mHandler.sendEmptyMessage(40);
+            mHandler.sendEmptyMessage(HandleWhat.getHoleCurve);
         }
     }
 
@@ -230,7 +230,7 @@ public class ActivityGrowCurve extends AppCompatActivity {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
 
-            if (msg.what == 40) {
+            if (msg.what == HandleWhat.getHoleCurve) {
                 makeLineChartData(false);
             }
             return true;

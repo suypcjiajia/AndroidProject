@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:textAlignment="center">
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="2" />
 
     <TextView
         android:id="@+id/button"
@@ -21,6 +22,7 @@
         android:id="@+id/textViewCulture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:text="0" />
 
     <Space
@@ -33,14 +35,15 @@
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
         android:background="@drawable/button_circle_shape_positive"
-        android:textAlignment="center"
-        android:text="+" />
+        android:text="+"
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/textViewPositive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" " />
+        android:layout_marginLeft="5dp"
+        android:text="0" />
 
     <Space
         android:layout_width="wrap_content"
@@ -52,14 +55,15 @@
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
         android:background="@drawable/button_circle_shape_negative"
-        android:textAlignment="center"
-        android:text="-" />
+        android:text="-"
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/textViewNegative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" " />
+        android:layout_marginLeft="5dp"
+        android:text="0" />
 
     <Space
         android:layout_width="wrap_content"
@@ -71,14 +75,15 @@
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
         android:background="@drawable/button_circle_shape_anopositive"
-        android:textAlignment="center"
-        android:text="+" />
+        android:text="+"
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/textViewAnoPositive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" " />
+        android:layout_marginLeft="5dp"
+        android:text="0" />
 
     <Space
         android:layout_width="wrap_content"
@@ -90,17 +95,20 @@
         android:layout_width="@dimen/kongsize"
         android:layout_height="@dimen/kongsize"
         android:background="@drawable/button_circle_shape_anonegative"
-        android:textAlignment="center"
-        android:text="-" />
+        android:text="-"
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/textViewAnoNegative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" " />
+        android:layout_marginLeft="5dp"
+        android:text="0" />
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="2" />
+
+
 </LinearLayout>

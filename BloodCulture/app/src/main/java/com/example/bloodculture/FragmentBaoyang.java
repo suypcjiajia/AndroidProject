@@ -60,7 +60,7 @@ public class FragmentBaoyang extends Fragment {
             Map<String,Object> item = new HashMap<>();
             item.put("name",an.get("MachineID").getAsString());
             item.put("maching",an.get("ExtensionNum").getAsString());
-            item.put("kong",an.get("HoleNum").getAsString());
+            item.put("kong",an.get("HoleNum").getAsInt() + 1);
             item.put("time",an.get("AddedTime").getAsString());
             items.add(item);
 

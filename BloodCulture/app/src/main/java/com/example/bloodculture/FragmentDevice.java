@@ -55,7 +55,7 @@ public class FragmentDevice extends Fragment {
 
             Map<String,Object> item = new HashMap<>();
             item.put("item1",an.get("type").getAsString());
-            item.put("item2",an.get("name").getAsString());
+            item.put("item2",an.get("name").getAsString() + "\n");
             items.add(item);
 
         }

@@ -9,6 +9,7 @@
     <color name="colorGray4">#f9f9f9</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#666666</color>
+    <color name="colorBlack2">#000000</color>
     <color name="colorOrange">#ff6600</color>
 
 </resources>

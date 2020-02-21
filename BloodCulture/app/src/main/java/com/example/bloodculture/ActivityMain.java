@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
 import com.example.tool.Http;
+import com.example.tool.NotificationUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -26,6 +28,7 @@ public class ActivityMain extends AppCompatActivity {
     JsonArray mBaoYangs;
     JsonArray mDevices;
     Boolean  started = false;
+    Boolean mThreadWork = false;
 
 
     @Override
@@ -47,17 +50,60 @@ public class ActivityMain extends AppCompatActivity {
 
         setBottonBaoyang();
 
+        //启动服务
+        Intent serintent = new Intent(this,MyService.class);
+        startService(serintent);
+
+
+        //判断该app是否打开了通知，如果没有的话就打开手机设置页面
+        NotificationUtil notiUtil = new NotificationUtil();
+        notiUtil.openNotificationSetting(this);
+
         if( !started) {
             started = true;
             thread.start();
         }
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        System.out.println("ActivityMain onStart");
+        mThreadWork = true;
+        Intent intent = getIntent();
+        handleNotify(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mThreadWork = true;
+        System.out.println("ActivityMain onNewIntent");
+        handleNotify(intent);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        System.out.println("ActivityMain onStop");
+        mThreadWork = false;
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        System.out.println("ActivityMain onPause");
+        mThreadWork = false;
+    }
+
+
+
     public void onBtnBottonBaoyangClick(View v) {
 
         toBaoyangPage();
 
     }
+
+
 
     public void onBtnBottonDeviceClick(View v) {
         toDevicePage();
@@ -95,7 +141,7 @@ public class ActivityMain extends AppCompatActivity {
 
         if (json.get("code").getAsInt() == 0){
             mBaoYangs = json.get("lists").getAsJsonArray();
-            mHandler.sendEmptyMessage(21);
+            mHandler.sendEmptyMessage(HandleWhat.bchistory);
         }
     }
 
@@ -105,7 +151,17 @@ public class ActivityMain extends AppCompatActivity {
 
         if (json.get("code").getAsInt() == 0){
             mDevices = json.get("lists").getAsJsonArray();
-            mHandler.sendEmptyMessage(22);
+            mHandler.sendEmptyMessage(HandleWhat.getDevicesByType);
+        }
+    }
+
+    private void handleNotify(@NonNull  Intent intent){
+        Bundle bdl = intent.getExtras();
+        if(bdl != null){
+            String cmd = intent.getExtras().getString("cmd");
+            if(cmd != null && cmd.equals("to")){
+                toBaoyangPage();
+            }
         }
     }
 
@@ -133,12 +189,11 @@ public class ActivityMain extends AppCompatActivity {
         public void run() {
             while (true) {
 
-
-                try {
-                    sleep(10000);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                if(!mThreadWork){
+                    sleepNoThrow(100);
+                    continue;
                 }
+
                 try {
                     httpBaoyang();
                     httpBloodDevices();
@@ -146,7 +201,17 @@ public class ActivityMain extends AppCompatActivity {
                     System.out.println(e.getMessage());
                 }
 
+                sleepNoThrow(5000);
 
+
+            }
+        }
+
+        private void sleepNoThrow(long millis){
+            try {
+                sleep(millis);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     };
@@ -155,11 +220,9 @@ public class ActivityMain extends AppCompatActivity {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
 
-            if (msg.what == 20) {
-
-            }else if(msg.what == 21){
+            if(msg.what == HandleWhat.bchistory){
                 fragmentBaoyang.setBaoYangList(mBaoYangs);
-            }else if( msg.what == 22){
+            }else if( msg.what == HandleWhat.getDevicesByType){
                 fragmentDevice.setDeviceList(mDevices);
             }
             return true;

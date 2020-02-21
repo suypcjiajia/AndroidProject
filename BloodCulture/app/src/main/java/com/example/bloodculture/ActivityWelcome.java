@@ -49,7 +49,7 @@ public class ActivityWelcome extends AppCompatActivity {
         public void run() {
 
             try {
-                sleep(1000*3);
+                sleep(1000*1);
             } catch (InterruptedException e) {
 
             }
