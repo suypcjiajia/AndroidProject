@@ -126,7 +126,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     public void setBottonBaoyang() {
-        findViewById(R.id.imageViewBaoyang).setBackgroundResource(R.drawable.baoyang_botton2);
+        findViewById(R.id.imageViewBaoyang).setBackgroundResource(R.drawable.baoyang_button2);
         findViewById(R.id.imageViewDevice).setBackgroundResource(R.drawable.device_button1);
     }
 
@@ -137,7 +137,7 @@ public class ActivityMain extends AppCompatActivity {
 
     private void httpBaoyang(){
 
-        JsonObject json = Http.bchistory("2020-02-16");
+        JsonObject json = Http.bchistory(0,200);
 
         if (json.get("code").getAsInt() == 0){
             mBaoYangs = json.get("lists").getAsJsonArray();

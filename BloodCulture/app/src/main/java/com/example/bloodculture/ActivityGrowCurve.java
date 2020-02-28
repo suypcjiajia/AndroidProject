@@ -29,13 +29,14 @@ public class ActivityGrowCurve extends AppCompatActivity {
 
     MyThread thread = new MyThread();
     JsonArray mHoleCurve;
+    View viewTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         System.out.println("ActivityGrowCurve onCreate");
         setContentView(R.layout.activity_grow_curve);
-        View viewTop = findViewById(R.id.top_in_grow_curve);
+        viewTop = findViewById(R.id.top_in_grow_curve);
         ImageButton back = viewTop.findViewById(R.id.back);
         back.setOnClickListener(onBtnBackClickListener);
     }
@@ -51,6 +52,7 @@ public class ActivityGrowCurve extends AppCompatActivity {
         makeLineChartData(true);
 
         ((TextView) findViewById(R.id.textViewKongTips)).setText(thread.holeNum + "号孔生长曲线");
+        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(thread.machineID + "-" + thread.extensionNum);
 
         thread.start();
 

@@ -51,6 +51,20 @@ public class FragmentBaoyang extends Fragment {
 
     public void setBaoYangList(JsonArray array){
 
+        if( array.size() == 0 ){
+            return;
+        }
+
+        if( mBaoyangData != null && mBaoyangData.size() != 0){
+            String newFirstItemTime = array.get(0).getAsJsonObject().get("AddedTime").getAsString();
+
+            String oldFristItmeTime = mBaoyangData.get(0).getAsJsonObject().get("AddedTime").getAsString();
+
+            if(newFirstItemTime.compareTo(oldFristItmeTime) <= 0){//没有最新的
+                return;
+            }
+        }
+
         List<Map<String,Object>> items = new ArrayList<>();
         mBaoyangData = array;
 

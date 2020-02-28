@@ -27,6 +27,7 @@ public class ActivityBoard extends AppCompatActivity {
     MyThread thread ;//线程任务：从服务器获取瓶孔预览
     String currentholeNum;//用户选了哪一个瓶子
     int mHoleCount;//面板共有多少瓶子
+    String machineID;
 
 
     View viewTop;
@@ -55,10 +56,6 @@ public class ActivityBoard extends AppCompatActivity {
         textViewAnoNegative = viewHole.findViewById(R.id.textViewAnoNegative);
 
         mSpinner = findViewById(R.id.spinner);
-        String[] arry = {"分机0", "分机1", "分机2"};
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
-                (this, R.layout.simple_item_fenji, arry);
-        mSpinner.setAdapter(arrayAdapter);
         mSpinner.setOnItemSelectedListener(onItemSelectedListener);
 
 
@@ -71,13 +68,15 @@ public class ActivityBoard extends AppCompatActivity {
         System.out.println("ActivityBoard onStart");
 
         thread = new MyThread();
+        thread.who = 1;
 
         Intent intent = getIntent();
-        thread.machineID = intent.getStringExtra("MachineID");
+        machineID = intent.getStringExtra("MachineID");
+        thread.machineID = machineID;
         thread.extensionNum = intent.getStringExtra("ExtensionNum");
         System.out.println("ActivityBoard machineID:" + thread.machineID + " ExtensionNum:" + thread.extensionNum);
 
-        mSpinner.setSelection(Integer.parseInt(thread.extensionNum));
+
 
         String type = intent.getStringExtra("type");
         if (type.isEmpty()) {
@@ -89,14 +88,39 @@ public class ActivityBoard extends AppCompatActivity {
             } else
                 mHoleCount = Integer.parseInt(type.substring(2));
         }
-        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(type);
+        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(machineID);
 
         System.out.println("ActivityBoard mHoleCount:" + mHoleCount);
 
+        MyThread thread2 = new MyThread();
+        thread2.who = 2;
+        thread2.machineID = thread.machineID;
+        thread2.extensionNum = thread.extensionNum;
+
 
         thread.start();
+        if( !ShareData.mExtensioninfo.containsKey(thread2.machineID))
+            thread2.start();
+        else{
+            JsonArray array = ShareData.mExtensioninfo.get(thread2.machineID);
+            setmSpinner(array);
+            if( Integer.parseInt(thread.extensionNum) < array.size())
+                mSpinner.setSelection(Integer.parseInt(thread.extensionNum));
+
+        }
 
 
+    }
+
+    private void setmSpinner(JsonArray array){
+        String[] arry = new String[array.size() ];
+        for( int i = 0; i < array.size(); i++){
+            arry[i] = "分机" +  array.get(i).getAsString();
+
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
+                (this, R.layout.simple_item_fenji, arry);
+        mSpinner.setAdapter(arrayAdapter);
     }
 
 
@@ -143,6 +167,9 @@ public class ActivityBoard extends AppCompatActivity {
             return;
         }
         Intent intent = new Intent(this, ActivityPepole.class);
+        intent.putExtra("MachineID", thread.machineID);
+        intent.putExtra("ExtensionNum", thread.extensionNum);
+        intent.putExtra("HoleNum", currentholeNum);
         startActivity(intent);
     }
 
@@ -275,8 +302,10 @@ public class ActivityBoard extends AppCompatActivity {
 
     class MyThread extends Thread {
 
+
         public String machineID;
         public String extensionNum;
+        public int who;
 
 
         public void run() {
@@ -285,7 +314,16 @@ public class ActivityBoard extends AppCompatActivity {
 
 
             try {
-                httpHoleSummary(machineID, extensionNum);
+                if( 1 == who) {
+                    httpHoleSummary(machineID, extensionNum);
+                }else if(2 == who){
+                    JsonObject json = Http.getExtensioninfo(machineID);
+
+                    if (json.get("code").getAsInt() == 0) {
+                        ShareData.mExtensioninfo.put(machineID,json.get("list").getAsJsonArray());
+                        mHandler.sendEmptyMessage(HandleWhat.getExtensioninfo);
+                    }
+                }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -309,6 +347,11 @@ public class ActivityBoard extends AppCompatActivity {
                 updateHoleState();
             } else if (msg.what == HandleWhat.getGetHoleSummaryError) {
                 initBoard();
+            }else if(msg.what == HandleWhat.getExtensioninfo){
+                JsonArray array = ShareData.mExtensioninfo.get(thread.machineID);
+                setmSpinner(array);
+                if( Integer.parseInt(thread.extensionNum) < array.size())
+                    mSpinner.setSelection(Integer.parseInt(thread.extensionNum));
             }
             return true;
         }
@@ -317,7 +360,16 @@ public class ActivityBoard extends AppCompatActivity {
     AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
 
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//            String txt = mSpinner.getSelectedItem().toString();
+//            if( txt.isEmpty() || !txt.contains("分机")){
+//                return;
+//            }
 
+            thread = new MyThread();
+            thread.extensionNum = String.valueOf(position);
+            thread.machineID = machineID;
+            thread.who = 1;
+            thread.start();
         }
 
         public void onNothingSelected(AdapterView<?> parent) {

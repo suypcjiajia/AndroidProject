@@ -104,13 +104,15 @@ public final class Http {
 
     /**
      * 获取血培养保阳列表（服务器按时间排序返回数据）
-     * @param date
+     * @param x
+     * @param y
      * @return
      */
-    public static JsonObject bchistory(String date){
+    public static JsonObject bchistory(int x,int y){
         try {
             JsonObject json = new JsonObject();
-            json.addProperty("datetime", date);
+            json.addProperty("x", x);
+            json.addProperty("y", y);
             System.out.println(  "Http bchistory call");
             String response = sendPost("http://" + ipaddr + "/alert/get/bchistory", json.toString());
             System.out.println(  "Http bchistory request:" +  json.toString()  + " response:"  + response);
@@ -226,6 +228,28 @@ public final class Http {
         }
     }
 
+
+    /**
+     * 获取分机数量
+     * @param machineID
+     * @return
+     */
+    public static JsonObject getExtensioninfo(String machineID){
+        try {
+            JsonObject json = new JsonObject();
+            json.addProperty("MachineID", machineID);
+            System.out.println(  "Http getExtensioninfo call");
+            String response = sendPost("http://" + ipaddr + "/bc/get/extensioninfo", json.toString());
+            System.out.println(  "Http getExtensioninfo request:" +  json.toString()  + " response:"  + response);
+            JsonElement element = JsonParser.parseString(response);
+
+            JsonObject jsonRes =  element.getAsJsonObject();
+            return jsonRes;
+
+        }catch (IllegalStateException e){
+            return makeExpetion(e);
+        }
+    }
 
     /**
      * 向指定URL发送GET方法的请求
