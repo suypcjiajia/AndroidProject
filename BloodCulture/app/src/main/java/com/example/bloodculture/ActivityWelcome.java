@@ -22,14 +22,19 @@ public class ActivityWelcome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        thread.start();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        new MyThread().start();
     }
 
 
     Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
-            if (msg.what == 0x11) {
+            if (msg.what == HandleWhat.welcomeEnd) {
 
                 Intent intent = new Intent(ActivityWelcome.this, ActivityMain.class);
                 startActivity(intent);
@@ -44,8 +49,9 @@ public class ActivityWelcome extends AppCompatActivity {
 
 
 
-    Thread  thread = new Thread()
+    class MyThread  extends Thread
     {
+        @Override
         public void run() {
 
             try {
@@ -54,9 +60,9 @@ public class ActivityWelcome extends AppCompatActivity {
 
             }
 
-            mHandler.sendEmptyMessage(0x11);
+            mHandler.sendEmptyMessage(HandleWhat.welcomeEnd);
 
         }
-    };
+    }
 
 }
