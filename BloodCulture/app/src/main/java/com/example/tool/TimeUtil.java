@@ -14,11 +14,11 @@ public class TimeUtil {
     }
 
     //long类型转换为String类型
-    // currentTime要转换的long类型的时间
+    // currentTime要转换的long类型的时间,秒
     // formatType要转换的string类型的时间格式
     public static String longToString(long currentTime, String formatType)
             throws ParseException {
-        Date date = longToDate(currentTime, formatType); // long类型转成Date类型
+        Date date = longToDate(currentTime*1000, formatType); // long类型转成Date类型
         String strTime = dateToString(date, formatType); // date类型转成String
         return strTime;
     }
@@ -46,10 +46,14 @@ public class TimeUtil {
         return date;
     }
 
-    //String类型转换为long类型
-    // strTime要转换的String类型的时间
-    // formatType时间格式
-    // strTime的时间格式和formatType的时间格式必须相同
+
+    /**
+     *
+     * @param strTime 要转换的String类型的时间
+     * @param formatType 时间格式
+     * @return 秒
+     * @throws ParseException
+     */
     public static long stringToLong(String strTime, String formatType)
             throws ParseException {
         Date date = stringToDate(strTime, formatType); // String类型转成date类型

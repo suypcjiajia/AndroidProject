@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.tool.Http;
+import com.example.tool.ShapeUtil;
 import com.example.tool.ShowTips;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -25,9 +28,12 @@ public class ActivityBoard extends AppCompatActivity {
 
     JsonArray mHoleSummary;//瓶孔预览(从服务器拿的数据，有可能是空的，也有可能不全)
     MyThread thread ;//线程任务：从服务器获取瓶孔预览
-    String currentholeNum;//用户选了哪一个瓶子
+    BottolView currentHoleView = null; //用户选了哪一个瓶子(view)
     int mHoleCount;//面板共有多少瓶子
     String machineID;
+    int mBaoyangHoleNum;
+    int callHttp = 0; //==1时表示从曲线返回，这时不用去刷新（不用http请求）
+
 
 
     View viewTop;
@@ -74,6 +80,7 @@ public class ActivityBoard extends AppCompatActivity {
         machineID = intent.getStringExtra("MachineID");
         thread.machineID = machineID;
         thread.extensionNum = intent.getStringExtra("ExtensionNum");
+        mBaoyangHoleNum = intent.getIntExtra("HoleNum",-1);
         System.out.println("ActivityBoard machineID:" + thread.machineID + " ExtensionNum:" + thread.extensionNum);
 
 
@@ -98,24 +105,50 @@ public class ActivityBoard extends AppCompatActivity {
         thread2.extensionNum = thread.extensionNum;
 
 
-        thread.start();
-        if( !ShareData.mExtensioninfo.containsKey(thread2.machineID))
-            thread2.start();
+        if( callHttp != 1) {
+            thread.start();
+        }
+        if( !ShareData.mExtensioninfo.containsKey(thread2.machineID)) {
+            if (callHttp != 1) {
+                thread2.start();
+            }
+        }
         else{
-            JsonArray array = ShareData.mExtensioninfo.get(thread2.machineID);
-            setmSpinner(array);
-            if( Integer.parseInt(thread.extensionNum) < array.size())
-                mSpinner.setSelection(Integer.parseInt(thread.extensionNum));
+            if(callHttp != 1) {
+                JsonArray array = ShareData.mExtensioninfo.get(thread2.machineID);
+                setmSpinner(array);
+
+                selectionSpinner(thread.extensionNum, thread2.machineID);
+            }
 
         }
 
+    }
 
+    @Override
+    public void onNewIntent(Intent intent){
+        super.onNewIntent(intent);
+        callHttp = intent.getIntExtra("callHttp",-1);
+    }
+
+    private void selectionSpinner(String extensionNum,String machineID){
+        JsonArray array = ShareData.mExtensioninfo.get(machineID);
+        for(int i = 0; i < array.size(); i++){
+            if(array.get(i).getAsString().equals(extensionNum) ){
+                mSpinner.setSelection(i);
+            }
+        }
     }
 
     private void setmSpinner(JsonArray array){
         String[] arry = new String[array.size() ];
         for( int i = 0; i < array.size(); i++){
-            arry[i] = "分机" +  array.get(i).getAsString();
+
+            if( array.get(i).getAsString().equals("0")){
+                arry[i] = "主机" ;
+            }else{
+                arry[i] = "分机" +  array.get(i).getAsString();
+            }
 
         }
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
@@ -149,27 +182,27 @@ public class ActivityBoard extends AppCompatActivity {
     }
 
     public void onBtnGrowCurveClick(View v) {
-        if( currentholeNum == null  || currentholeNum.isEmpty()){
-            ShowTips.showMsg("先点击选择瓶子编号", this);
+        if( currentHoleView == null ){
+            ShowTips.showMsg("先点击选择瓶子", this);
             return;
         }
         Intent intent = new Intent(this, ActivityGrowCurve.class);
         intent.putExtra("MachineID", thread.machineID);
         intent.putExtra("ExtensionNum", thread.extensionNum);
-        intent.putExtra("HoleNum", currentholeNum);
+        intent.putExtra("HoleNum", currentHoleView.getText());
 
         startActivity(intent);
     }
 
     public void onBtnPepoleClick(View v) {
-        if( currentholeNum == null   || currentholeNum.isEmpty()){
-            ShowTips.showMsg("先点击选择瓶子编号", this);
+        if( currentHoleView == null  ){
+            ShowTips.showMsg("先点击选择瓶子", this);
             return;
         }
         Intent intent = new Intent(this, ActivityPepole.class);
         intent.putExtra("MachineID", thread.machineID);
         intent.putExtra("ExtensionNum", thread.extensionNum);
-        intent.putExtra("HoleNum", currentholeNum);
+        intent.putExtra("HoleNum", currentHoleView.getText());
         startActivity(intent);
     }
 
@@ -196,12 +229,15 @@ public class ActivityBoard extends AppCompatActivity {
                 params.height = params.width;
                 int margin = (holeWidth - params.width) / 2;
                 params.setMargins(margin, margin/3, margin, margin/3);
-                TextView view = new TextView(this);
+                BottolView view = new BottolView(this);
                 view.setId(10000 + i * columnCount + j );
                 view.setText(String.valueOf(i * columnCount + j + 1));
                 view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 view.setGravity(Gravity.CENTER_VERTICAL);
-                view.setBackgroundResource(R.drawable.button_circle_shape_empty);//初始化成空瓶
+
+                view.setMyColor(0xff999999);
+                view.setMyState(HoleState.hole_empty);
+                view.back();
 
                 gridLayout.addView(view, params);
                 view.setOnClickListener(onHoleClick);
@@ -235,32 +271,40 @@ public class ActivityBoard extends AppCompatActivity {
                 continue;
             }
 
-            TextView view = gridLayout.findViewById(10000 + HoleNum);
+            BottolView view = gridLayout.findViewById(10000 + HoleNum);
             if (view == null) {
                 continue;
             }
 
             int state = hole.get("CurrentState").getAsInt();
+            view.setMyState(state);
             if (state == HoleState.hole_invalid) {
-                view.setBackgroundResource(R.drawable.button_circle_shape_invalid);
+                view.setMyColor(0xffB5B510);
 
             } else if (state == HoleState.hole_empty) {
-                view.setBackgroundResource(R.drawable.button_circle_shape_empty);
+                view.setMyColor(0xff999999);
+
             } else if (state == HoleState.hole_culture) {
-                view.setBackgroundResource(R.drawable.button_circle_shape_culture);
+                view.setMyColor(0xff98B2E4);
                 cultureNum++;
             } else if (state == HoleState.hole_positive) {
-                view.setBackgroundResource(R.drawable.button_circle_shape_positive);
+                view.setMyColor(0xffC90606);
                 positiveNum++;
             } else if (state == HoleState.hole_negative) {
-                view.setBackgroundResource(R.drawable.button_circle_shape_negative);
+                view.setMyColor(0xffA2B792);
                 negativeNum++;
             } else if (state == HoleState.hole_anoposivive) {
-                view.setBackgroundResource(R.drawable.button_circle_shape_anopositive);
+                view.setMyColor(0xffF2B76E);
                 anopositiveNum++;
             } else if (state == HoleState.hole_anonegative) {
-                view.setBackgroundResource(R.drawable.button_circle_shape_anonegative);
+                view.setMyColor(0xffBDD391);
                 anonegativeNum++;
+            }
+            if( HoleNum == mBaoyangHoleNum){
+                view.selected();
+                currentHoleView = view;
+            }else {
+                view.back();
             }
         }
 
@@ -350,8 +394,7 @@ public class ActivityBoard extends AppCompatActivity {
             }else if(msg.what == HandleWhat.getExtensioninfo){
                 JsonArray array = ShareData.mExtensioninfo.get(thread.machineID);
                 setmSpinner(array);
-                if( Integer.parseInt(thread.extensionNum) < array.size())
-                    mSpinner.setSelection(Integer.parseInt(thread.extensionNum));
+                selectionSpinner(thread.extensionNum,thread.machineID);
             }
             return true;
         }
@@ -370,6 +413,7 @@ public class ActivityBoard extends AppCompatActivity {
             thread.machineID = machineID;
             thread.who = 1;
             thread.start();
+
         }
 
         public void onNothingSelected(AdapterView<?> parent) {
@@ -380,7 +424,16 @@ public class ActivityBoard extends AppCompatActivity {
 
     View.OnClickListener onHoleClick = new View.OnClickListener() {
         public void onClick(View v) {
-            currentholeNum = ((TextView) v).getText().toString();
+            BottolView clickView = (BottolView)v;
+            if(clickView.equals(currentHoleView)){
+                return;
+            }
+            if( currentHoleView != null){
+                currentHoleView.back();
+            }
+
+            clickView.selected();
+            currentHoleView = clickView;
         }
     };
 

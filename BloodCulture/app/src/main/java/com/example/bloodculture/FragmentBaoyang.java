@@ -73,7 +73,11 @@ public class FragmentBaoyang extends Fragment {
 
             Map<String,Object> item = new HashMap<>();
             item.put("name",an.get("MachineID").getAsString());
-            item.put("maching",an.get("ExtensionNum").getAsString());
+            if( an.get("ExtensionNum").getAsString().equals("0")){//0是主机代码
+                item.put("maching","主机");
+            }else {
+                item.put("maching",  "分机"  + an.get("ExtensionNum").getAsString());
+            }
             item.put("kong",an.get("HoleNum").getAsInt() + 1);
             item.put("time",an.get("AddedTime").getAsString());
             items.add(item);
@@ -95,6 +99,7 @@ public class FragmentBaoyang extends Fragment {
             Intent intent = new Intent(getContext(), ActivityBoard.class);
             intent.putExtra("MachineID",elem.get("MachineID").getAsString());
             intent.putExtra("ExtensionNum",elem.get("ExtensionNum").getAsString());
+            intent.putExtra("HoleNum",elem.get("HoleNum").getAsInt());
             intent.putExtra("type",elem.get("type").getAsString());
 
 

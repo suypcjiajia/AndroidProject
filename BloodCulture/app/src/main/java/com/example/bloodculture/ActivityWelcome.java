@@ -21,13 +21,12 @@ public class ActivityWelcome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
+        new MyThread().start();
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-        new MyThread().start();
     }
 
 
@@ -38,6 +37,8 @@ public class ActivityWelcome extends AppCompatActivity {
 
                 Intent intent = new Intent(ActivityWelcome.this, ActivityMain.class);
                 startActivity(intent);
+
+                finish();
 
             }
             return true;
@@ -55,7 +56,7 @@ public class ActivityWelcome extends AppCompatActivity {
         public void run() {
 
             try {
-                sleep(1000*1);
+                sleep(1000*2);
             } catch (InterruptedException e) {
 
             }

@@ -77,7 +77,7 @@ public class NotificationUtil {
 
         AlertDialog alertDialog = new AlertDialog.Builder(mContext)
                 .setTitle("需要开启通知")//标题
-                .setMessage("开启通知后，才能实时收到消息")//内容
+                .setMessage("开启通知后，才能收到通知")//内容
                 .setIcon(R.mipmap.app_icon)//图标
                 .setPositiveButton(R.string.ok_title,lis)
                 .setNegativeButton(R.string.cancel_title,lis)

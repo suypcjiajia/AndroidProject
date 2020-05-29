@@ -28,7 +28,8 @@ public class ActivityPepole extends AppCompatActivity {
         String MachineID = intent.getStringExtra("MachineID");
         String extensionNum = intent.getStringExtra("ExtensionNum");
         String holeNum = intent.getStringExtra("HoleNum");
-        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(MachineID + "-" + extensionNum);
+        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(MachineID + "-"
+        + (extensionNum.equals("0") ? "主机" :  "分机" + extensionNum));
 
         ((TextView)findViewById(R.id.textView13)).setText("孔号:" +  holeNum);
     }
@@ -41,6 +42,7 @@ public class ActivityPepole extends AppCompatActivity {
          */
         public void onClick(View v){
             Intent intent = new Intent(ActivityPepole.this, ActivityBoard.class);
+            intent.putExtra("callHttp",1);
             startActivity(intent);
         }
     };

@@ -1,22 +1,32 @@
 package com.example.bloodculture;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.tool.Http;
 import com.example.tool.NotificationUtil;
+import com.example.tool.PhoneMaderSetting;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ActivityMain extends AppCompatActivity {
@@ -29,6 +39,8 @@ public class ActivityMain extends AppCompatActivity {
     JsonArray mDevices;
     Boolean  started = false;
     Boolean mThreadWork = false;
+
+    long backKeyLastTime = 0;//记录返回键上一次按下的时间
 
 
     @Override
@@ -59,11 +71,17 @@ public class ActivityMain extends AppCompatActivity {
         NotificationUtil notiUtil = new NotificationUtil();
         notiUtil.openNotificationSetting(this);
 
+        PhoneMaderSetting.showBatteryOptimizations(this);
+
         if( !started) {
             started = true;
             thread.start();
         }
     }
+
+
+
+
 
     @Override
     protected void onStart(){
@@ -93,6 +111,26 @@ public class ActivityMain extends AppCompatActivity {
         super.onPause();
         System.out.println("ActivityMain onPause");
         mThreadWork = false;
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            long backKeyCurrentTime = new Date().getTime()/1000;
+            if( backKeyCurrentTime - 3 <= backKeyLastTime){
+                return super.onKeyDown(keyCode, event);
+            }else{
+                backKeyLastTime = backKeyCurrentTime;
+                Toast.makeText(getApplicationContext(), "再按一次退出", Toast.LENGTH_SHORT).show();
+            }
+
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+
     }
 
 
@@ -164,6 +202,8 @@ public class ActivityMain extends AppCompatActivity {
             }
         }
     }
+
+
 
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -34,10 +34,5 @@
         android:background="@color/colorGray4"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/btn_grow_curve2" />
     </LinearLayout>
 </LinearLayout>

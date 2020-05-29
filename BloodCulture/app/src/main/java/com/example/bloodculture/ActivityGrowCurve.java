@@ -15,15 +15,20 @@ import android.widget.TextView;
 import com.example.tool.Http;
 import com.example.tool.TimeUtil;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+
+import static java.lang.Integer.parseInt;
 
 public class ActivityGrowCurve extends AppCompatActivity {
 
@@ -52,7 +57,9 @@ public class ActivityGrowCurve extends AppCompatActivity {
         makeLineChartData(true);
 
         ((TextView) findViewById(R.id.textViewKongTips)).setText(thread.holeNum + "号孔生长曲线");
-        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(thread.machineID + "-" + thread.extensionNum);
+
+        ((TextView) viewTop.findViewById(R.id.txtDeviceType)).setText(thread.machineID
+                + "-" + (thread.extensionNum.equals("0") ? "主机" :  "分机" + thread.extensionNum) );
 
         thread.start();
 
@@ -85,7 +92,7 @@ public class ActivityGrowCurve extends AppCompatActivity {
                 } catch (Exception e) {
                     continue;
                 }
-                values1.add(new Entry(x_time, Integer.parseInt(dataarry[1])));
+                values1.add(new Entry(x_time, parseInt(dataarry[1])));
             }
 
         }
@@ -99,13 +106,13 @@ public class ActivityGrowCurve extends AppCompatActivity {
         set1.setColor(Color.GRAY);
         set1.setCircleColor(Color.GRAY);
         set1.setLineWidth(1f);//设置线宽
-        set1.setCircleRadius(2f);//设置焦点圆心的大小
-        set1.enableDashedHighlightLine(10f, 5f, 0f);//点击后的高亮线的显示样式
-        set1.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
-        set1.setHighlightEnabled(true);//是否禁用点击高亮线
-        set1.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
-        set1.setValueTextSize(9f);//设置显示值的文字大小
+        set1.setCircleRadius(1f);//设置焦点圆心的大小
+        set1.setDrawCircleHole(false);
+        set1.setHighlightEnabled(false);//是否禁用点击高亮线
+        set1.setValueTextSize(1f);//设置显示值的文字大小
+        set1.setValueTextColor(0x00ffffff);
         set1.setDrawFilled(false);//设置禁用范围背景填充
+        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);//设置曲线展示为圆滑曲线（
 
         //保存LineDataSet集合
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -118,7 +125,14 @@ public class ActivityGrowCurve extends AppCompatActivity {
 
         //获取此图表的x轴
         XAxis xAxis = lineChart.getXAxis();
-        xAxis.setDrawLabels(false);//绘制标签  指x轴上的对应数值
+        YAxis leftYAxis = lineChart.getAxisLeft();
+        YAxis rightYaxis = lineChart.getAxisRight();
+        leftYAxis.setAxisMinimum(0f);
+        leftYAxis.setAxisMaximum(360f);
+        rightYaxis.setAxisMinimum(0f);
+        rightYaxis.setAxisMaximum(360f);
+        xAxis.setValueFormatter(iAxisValueFormatter);
+        xAxis.setDrawLabels(true);//绘制标签  指x轴上的对应数值
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//设置x轴的显示位置
         //绘制图表
         lineChart.invalidate();
@@ -188,7 +202,7 @@ public class ActivityGrowCurve extends AppCompatActivity {
     private void httpHoleCurve(String machineID, String extensionNum,
                                String holeNum) {
 
-        JsonObject json = Http.getHoleCurve(machineID, extensionNum, holeNum,100);
+        JsonObject json = Http.getHoleCurve(machineID, extensionNum, holeNum,200);
 
         if (json.get("code").getAsInt() == 0) {
             mHoleCurve = json.get("lists").getAsJsonArray();
@@ -204,6 +218,7 @@ public class ActivityGrowCurve extends AppCompatActivity {
          */
         public void onClick(View v) {
             Intent intent = new Intent(ActivityGrowCurve.this, ActivityBoard.class);
+            intent.putExtra("callHttp",1);
             startActivity(intent);
         }
     };
@@ -220,7 +235,8 @@ public class ActivityGrowCurve extends AppCompatActivity {
 
 
             try {
-                httpHoleCurve(machineID, extensionNum, holeNum);
+
+                httpHoleCurve(machineID, extensionNum, String.valueOf(Integer.parseInt(holeNum) -1));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -238,6 +254,29 @@ public class ActivityGrowCurve extends AppCompatActivity {
             return true;
         }
     });
+
+    IAxisValueFormatter iAxisValueFormatter = new IAxisValueFormatter() {
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            String timestr;
+
+            if(value < 1000000){
+                return "";
+            }
+
+            try{
+                timestr = TimeUtil.longToString((long)value,"yyyy-MM-dd HH:mm:ss");
+                System.out.println("xxx:" + value  + " " + timestr);
+                if( timestr != null && timestr.length() ==19){
+                    return timestr.substring(11,16);
+                }
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            return "";
+
+        }
+    };
 
 
 }
