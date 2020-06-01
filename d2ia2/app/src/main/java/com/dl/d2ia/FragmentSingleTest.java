@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dl.com.dl.bo.TestRecord;
+import com.dl.component.ProgerssCircle;
 import com.dl.db.TestResultDao;
 import com.dl.tool.CRCCheck;
 import com.dl.tool.HexCode;
@@ -34,7 +35,7 @@ public class FragmentSingleTest extends Fragment {
     ImageView btnSepcimen;
     ImageView btnStandard;
     ImageView btnQuick;
-    ProgressBar progressBar;
+    ProgerssCircle progerssCircle;
     TextView tipInfo;
 
 
@@ -71,11 +72,8 @@ public class FragmentSingleTest extends Fragment {
         btnQuick = root.findViewById(R.id.btnQuick);
         btnQuick.setOnClickListener(clickBtnQuick);
 
-        progressBar = root.findViewById(R.id.progressBar4);
+        progerssCircle = root.findViewById(R.id.progressCricle);
         tipInfo = root.findViewById(R.id.tipInfo);
-
-        progressBar.setProgress(0);
-
 
 
         mBluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
@@ -142,14 +140,16 @@ public class FragmentSingleTest extends Fragment {
     private  void stopAndClean(){
         myThread.setScan(false);
         count = 0;
-        progressBar.setProgress(0);
+
+        progerssCircle.setSweepAngle(0);
         TestResultDao.testRecord.result = "";
         TestResultDao.testRecord.curver.clear();
     }
 
     private void cleanAndStart(){
         count = 0;
-        progressBar.setProgress(0);
+
+        progerssCircle.setSweepAngle(0);
         TestResultDao.testRecord.result = "";
         TestResultDao.testRecord.curver.clear();
         myThread.setScan(true);
@@ -222,7 +222,7 @@ public class FragmentSingleTest extends Fragment {
                     String readMessage=new String(readBuf,0,readBuf.length);
                     tipInfo.setText(readMessage);
 
-                    progressBar.setProgress(count*5);
+                    progerssCircle.setSweepAngle(count*18);
                     break;
                 case HandleId.connectState:
 

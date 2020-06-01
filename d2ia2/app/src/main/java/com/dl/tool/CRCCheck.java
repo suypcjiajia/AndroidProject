@@ -1,5 +1,9 @@
 package com.dl.tool;
 
+/**
+ * crc校验
+ */
+
 public class CRCCheck {
 
 

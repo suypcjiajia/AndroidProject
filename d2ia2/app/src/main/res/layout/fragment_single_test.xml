@@ -55,22 +55,20 @@
         android:id="@+id/view4"
         android:layout_width="match_parent"
         android:background="@color/color10percentBlack"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+
+        />
 
 
-    <View
-        android:id="@+id/view9"
+
+    <com.dl.component.ProgerssCircle
+        android:id="@+id/progressCricle"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_height="0dp" />
-
-    <ProgressBar
-        android:id="@+id/progressBar4"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        app:startAngle="0"
+        app:sweepAngle="0"
+        />
 
     <TextView
         android:id="@+id/tipInfo"
@@ -79,11 +77,7 @@
         android:textAlignment="center"
         android:text="提示信息" />
 
-    <View
-        android:id="@+id/view8"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

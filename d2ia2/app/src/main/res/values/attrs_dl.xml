@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ProgerssCircle">
+        <attr name="startAngle" format="reference|integer"></attr>
+        <attr name="sweepAngle" format="reference|integer"></attr>
+    </declare-styleable>
+</resources>
