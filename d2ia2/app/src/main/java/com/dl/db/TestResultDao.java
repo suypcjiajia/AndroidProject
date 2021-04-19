@@ -34,6 +34,10 @@ public class TestResultDao {
         contentValues.put("testMan",testRecord.testMan);
         contentValues.put("age",testRecord.age);
         contentValues.put("sex",testRecord.sex);
+        contentValues.put("result",testRecord.result);
+        contentValues.put("testTime",testRecord.testTime);
+        contentValues.put("testMan",testRecord.testMan);
+        contentValues.put("nonDu",testRecord.nonDu);
         String tmp = new String();
         for( int i = 0; i < testRecord.curver.size();  i++){
             tmp += testRecord.curver.get(i);
@@ -96,6 +100,15 @@ public class TestResultDao {
                 pos = cursor.getColumnIndex("sex");
                 if(pos != -1){
                     testRecord.sex =   cursor.getString(pos);
+                }
+
+                pos = cursor.getColumnIndex("testTime");
+                if(pos != -1){
+                    testRecord.testTime =   cursor.getString(pos);
+                }
+                pos = cursor.getColumnIndex("result");
+                if(pos != -1){
+                    testRecord.result =   cursor.getString(pos);
                 }
 
                 pos = cursor.getColumnIndex("curver");

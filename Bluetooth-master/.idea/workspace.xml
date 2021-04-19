@@ -11,24 +11,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4e99dc21-6c79-4e4f-a651-0ec1d06fbbe6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../hellojava/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../hellojava/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityGrowCurve.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityGrowCurve.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityPepole.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityPepole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityWelcome.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/ActivityWelcome.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/FragmentBaoyang.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/bloodculture/FragmentBaoyang.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/tool/NotificationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/tool/NotificationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/tool/TimeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/java/com/example/tool/TimeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/activity_grow_curve.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/activity_grow_curve.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/activity_pepole.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/activity_pepole.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/fragment_baoyang.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/fragment_baoyang.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/fragment_device.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/fragment_device.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../doc/APP功能.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../doc/手机APP三大模块可行性分析.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../hellojava/lib/src/main/java/com/example/lib/MyClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/../hellojava/lib/src/main/java/com/example/lib/MyClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BloodCulture/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../d2ia2/app/src/main/java/com/dl/d2ia/FragmentCurve.java" beforeDir="false" afterPath="$PROJECT_DIR$/../d2ia2/app/src/main/java/com/dl/d2ia/FragmentCurve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../d2ia2/app/src/main/java/com/dl/d2ia/FragmentSingleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../d2ia2/app/src/main/java/com/dl/d2ia/FragmentSingleTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../d2ia2/app/src/main/java/com/dl/db/TestResultDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../d2ia2/app/src/main/java/com/dl/db/TestResultDao.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -97,7 +86,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/android/myapplication/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="951">
+            <state relative-caret-position="-529">
               <caret line="191" column="46" selection-start-line="191" selection-start-column="46" selection-end-line="191" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -215,9 +204,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1010" />
-    <option name="y" value="191" />
+    <option name="y" value="190" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
@@ -227,9 +216,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -276,9 +262,13 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../d2ia2" />
     <property name="not.eligible.for.single.variant.sync" value="true" />
@@ -395,11 +385,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="2062" height="1126" extended-state="7" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.24151696" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26746505" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Build Variants" order="4" side_tool="true" />
@@ -414,7 +403,7 @@
       <window_info anchor="bottom" id="Terminal" order="4" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="6" />
-      <window_info anchor="bottom" id="Build" order="7" weight="0.32964823" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.32897383" />
       <window_info anchor="bottom" id="Android Profiler" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Find" order="9" weight="0.32964823" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
@@ -484,24 +473,24 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/device_list.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
       <provider editor-type-id="text-editor">
         <state relative-caret-position="863">
           <caret line="37" column="24" selection-start-line="37" selection-start-column="24" selection-end-line="37" selection-end-column="24" />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/list_item.xml">
-      <provider selected="true" editor-type-id="text-editor" />
       <provider editor-type-id="android-designer2" />
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="text-editor" />
       <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml">
-      <provider selected="true" editor-type-id="text-editor" />
       <provider editor-type-id="android-designer2" />
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-26/android.jar!/android/bluetooth/BluetoothDevice.class">
       <provider selected="true" editor-type-id="text-editor">
@@ -604,12 +593,12 @@
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-fragment/26.1.0/8279b00f5194701ff18363fa2958c5a26670b0ef/support-fragment-26.1.0-sources.jar!/android/support/v4/app/FragmentActivity.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="756">
           <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
         </state>
       </provider>
-      <provider editor-type-id="android-manifest" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/android/myapplication/SpBLE.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -677,7 +666,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/android/myapplication/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="951">
+        <state relative-caret-position="-529">
           <caret line="191" column="46" selection-start-line="191" selection-start-column="46" selection-end-line="191" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="true" />

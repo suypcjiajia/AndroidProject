@@ -23,6 +23,8 @@ import com.example.tool.TimeUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import static com.example.bloodculture.ActivityMain.fragmentAttention;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +34,9 @@ public class FragmentBaoyang extends Fragment {
     View root;
     ListView listView ;
 
-    JsonArray mBaoyangData;
+    JsonArray mBaoyangData = new JsonArray();
+
+    String oldFristItmeTime = new String();
 
     public FragmentBaoyang() {
         // Required empty public constructor
@@ -55,33 +59,51 @@ public class FragmentBaoyang extends Fragment {
             return;
         }
 
-        if( mBaoyangData != null && mBaoyangData.size() != 0){
+
+        if( !oldFristItmeTime.isEmpty()){
             String newFirstItemTime = array.get(0).getAsJsonObject().get("AddedTime").getAsString();
-
-            String oldFristItmeTime = mBaoyangData.get(0).getAsJsonObject().get("AddedTime").getAsString();
-
             if(newFirstItemTime.compareTo(oldFristItmeTime) <= 0){//没有最新的
                 return;
             }
         }
+        oldFristItmeTime = array.get(0).getAsJsonObject().get("AddedTime").getAsString();
+
+        List<Map<String,Object>> attens = ActivityMain.fragmentAttention.get();//关注的条码
 
         List<Map<String,Object>> items = new ArrayList<>();
-        mBaoyangData = array;
 
         for( int i = 0; i < array.size(); i ++){
             JsonObject an = array.get(i).getAsJsonObject();
 
-            Map<String,Object> item = new HashMap<>();
-            item.put("name",an.get("MachineID").getAsString());
-            if( an.get("ExtensionNum").getAsString().equals("0")){//0是主机代码
-                item.put("maching","主机");
-            }else {
-                item.put("maching",  "分机"  + an.get("ExtensionNum").getAsString());
-            }
-            item.put("kong",an.get("HoleNum").getAsInt() + 1);
-            item.put("time",an.get("AddedTime").getAsString());
-            items.add(item);
+            for(int j = 0; j < attens.size(); j++){
+                Map<String,Object> atten = attens.get(j);
+                if(atten.get("id").toString().equals(an.get("MachineID").getAsString())){
+                    //报阳瓶上的条码是要关注的条码
+                    appendBaoYang(items,an);
+                    mBaoyangData.add(array.get(i));
 
+                    break;
+                }
+            }
+
+
+        }
+
+        for( int i = 0; i < array.size(); i ++){
+            JsonObject an = array.get(i).getAsJsonObject();
+
+            boolean match = false;
+            for(int j = 0; j < attens.size(); j++){
+                Map<String,Object> atten = attens.get(j);
+                if(atten.get("id").toString().equals(an.get("MachineID").getAsString())){
+                    match = true;
+                    break;
+                }
+            }
+            if(!match){
+                appendBaoYang(items,an);
+                mBaoyangData.add(array.get(i));
+            }
         }
 
 
@@ -106,5 +128,18 @@ public class FragmentBaoyang extends Fragment {
             startActivity(intent);
         }
     };
+
+    private void  appendBaoYang(List<Map<String,Object>> items,JsonObject an){
+        Map<String,Object> item = new HashMap<>();
+        item.put("name",an.get("MachineID").getAsString());
+        if( an.get("ExtensionNum").getAsString().equals("0")){//0是主机代码
+            item.put("maching","主机");
+        }else {
+            item.put("maching",  "分机"  + an.get("ExtensionNum").getAsString());
+        }
+        item.put("kong",an.get("HoleNum").getAsInt() + 1);
+        item.put("time",an.get("AddedTime").getAsString());
+        items.add(item);
+    }
 
 }

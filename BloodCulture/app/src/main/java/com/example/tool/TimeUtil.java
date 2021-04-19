@@ -71,4 +71,8 @@ public class TimeUtil {
         return date.getTime()/1000;
     }
 
+    public static String now(){
+        return TimeUtil.dateToString(new Date(),"yyyy-MM-dd HH:mm:ss");
+    }
+
 }

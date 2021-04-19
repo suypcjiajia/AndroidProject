@@ -22,7 +22,9 @@ import com.dl.component.ProgerssCircle;
 import com.dl.db.TestResultDao;
 import com.dl.tool.CRCCheck;
 import com.dl.tool.HexCode;
+import com.dl.tool.TimeUtil;
 
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -134,6 +136,38 @@ public class FragmentSingleTest extends Fragment {
          */
         public void onClick(View v){
 
+            TestRecord tmp = new TestRecord();
+
+            tmp.id =  "12345";
+            tmp.result = "阳性";
+            tmp.testTime = "2021-04-09 08:30";
+            tmp.name = "suyp";
+            tmp.age = "6";
+            tmp.sex = "男";
+            tmp.testMan = "test";
+            tmp.curver.add("2020-02-17 16:28:01,1");
+            tmp.curver.add("2020-02-17 16:29:01,2");
+            tmp.curver.add("2020-02-17 16:30:01,4");
+            tmp.curver.add("2020-02-17 16:31:01,8");
+            tmp.curver.add("2020-02-17 16:32:01,16");
+            tmp.curver.add("2020-02-17 16:33:01,24");
+            tmp.curver.add("2020-02-17 16:34:01,16");
+            tmp.curver.add("2020-02-17 16:35:01,8");
+            tmp.curver.add("2020-02-17 16:36:01,4");
+            tmp.curver.add("2020-02-17 16:37:01,2");
+            tmp.curver.add("2020-02-17 16:38:01,1");
+
+            tmp.curver.add("2020-02-17 16:39:01,1");
+            tmp.curver.add("2020-02-17 16:40:01,2");
+            tmp.curver.add("2020-02-17 16:41:01,4");
+            tmp.curver.add("2020-02-17 16:42:01,8");
+            tmp.curver.add("2020-02-17 16:43:01,16");
+            tmp.curver.add("2020-02-17 16:44:01,8");
+            tmp.curver.add("2020-02-17 16:45:01,4");
+            tmp.curver.add("2020-02-17 16:46:01,2");
+            tmp.curver.add("2020-02-17 16:37:01,1");
+
+            biaoBenDao.insert(tmp);
         }
     };
 

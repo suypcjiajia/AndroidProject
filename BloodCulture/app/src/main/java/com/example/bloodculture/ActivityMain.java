@@ -19,12 +19,17 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.bo.AttentionRecord;
 import com.example.tool.Http;
 import com.example.tool.NotificationUtil;
 import com.example.tool.PhoneMaderSetting;
+import com.example.tool.TimeUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +38,7 @@ public class ActivityMain extends AppCompatActivity {
 
     FragmentBaoyang fragmentBaoyang;
     FragmentDevice fragmentDevice;
+    static FragmentAttention fragmentAttention;
     androidx.viewpager.widget.ViewPager viewPager;
 
     JsonArray mBaoYangs;
@@ -42,6 +48,8 @@ public class ActivityMain extends AppCompatActivity {
 
     long backKeyLastTime = 0;//记录返回键上一次按下的时间
 
+    static ActivityMain self;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +58,11 @@ public class ActivityMain extends AppCompatActivity {
 
         fragmentBaoyang = new FragmentBaoyang();
         fragmentDevice = new FragmentDevice();
+        fragmentAttention = new FragmentAttention();
         List<Fragment> listView = new ArrayList<>();
         listView.add(fragmentBaoyang);
         listView.add(fragmentDevice);
+        listView.add(fragmentAttention);
         MyViewAdapter viewAdapter = new MyViewAdapter(getSupportFragmentManager(), listView);
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(viewAdapter);
@@ -77,6 +87,8 @@ public class ActivityMain extends AppCompatActivity {
             started = true;
             thread.start();
         }
+
+        self = ActivityMain.this;
     }
 
 
@@ -132,6 +144,34 @@ public class ActivityMain extends AppCompatActivity {
         }
 
     }
+    @Override
+    protected  void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        /**
+         * 处理二维码的扫描结果
+         */
+        if (requestCode == 1){
+            //处理扫描结果(在界面上显示)
+            if (data != null){
+                Bundle bundle = data.getExtras();
+                if (bundle == null){
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS){
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    Toast.makeText(this,"解析结果"+result,Toast.LENGTH_LONG).show();
+                    AttentionRecord attentionRecord = new AttentionRecord();
+                    attentionRecord.id = result;
+                    attentionRecord.addTime = TimeUtil.now();
+                    FragmentAttention.attentionDao.insert(attentionRecord);
+                    fragmentAttention.append(attentionRecord);
+                }else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED){
+                    Toast.makeText(this,"解析二维码失败",Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 
 
 
@@ -146,6 +186,11 @@ public class ActivityMain extends AppCompatActivity {
     public void onBtnBottonDeviceClick(View v) {
         toDevicePage();
     }
+
+    public  void onBtnBootonScanClick(View v){
+        toAttention();
+    }
+
 
     //切换Fragment到报阳页
     public void toBaoyangPage() {
@@ -163,14 +208,26 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
+    public void toAttention(){
+        viewPager.setCurrentItem(2);
+        setBottonAttention();
+    }
+
     public void setBottonBaoyang() {
         findViewById(R.id.imageViewBaoyang).setBackgroundResource(R.drawable.baoyang_button2);
         findViewById(R.id.imageViewDevice).setBackgroundResource(R.drawable.device_button1);
+        findViewById(R.id.imageViewScan).setBackgroundResource(R.drawable.attention1);
     }
 
     public void setBottonDevice() {
         findViewById(R.id.imageViewBaoyang).setBackgroundResource(R.drawable.baoyang_button1);
         findViewById(R.id.imageViewDevice).setBackgroundResource(R.drawable.device_button2);
+        findViewById(R.id.imageViewScan).setBackgroundResource(R.drawable.attention1);
+    }
+    public void setBottonAttention(){
+        findViewById(R.id.imageViewBaoyang).setBackgroundResource(R.drawable.baoyang_button1);
+        findViewById(R.id.imageViewDevice).setBackgroundResource(R.drawable.device_button1);
+        findViewById(R.id.imageViewScan).setBackgroundResource(R.drawable.attention2);
     }
 
     private void httpBaoyang(){
@@ -216,6 +273,8 @@ public class ActivityMain extends AppCompatActivity {
                 setBottonBaoyang();
             } else if (position == 1) {
                 setBottonDevice();
+            }else if(position == 2){
+                setBottonAttention();
             }
         }
 
@@ -268,4 +327,9 @@ public class ActivityMain extends AppCompatActivity {
             return true;
         }
     });
+
+    public void startScan(){
+        Intent intent = new Intent(ActivityMain.this, CaptureActivity.class);
+        startActivityForResult(intent,1);
+    }
 }

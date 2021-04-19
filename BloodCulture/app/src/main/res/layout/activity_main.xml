@@ -30,8 +30,8 @@
             android:id="@+id/imageViewBaoyang"
             android:layout_width="25dp"
             android:layout_height="40dp"
-            android:onClick="onBtnBottonBaoyangClick"
-            android:background="@drawable/baoyang_button1" />
+            android:background="@drawable/baoyang_button1"
+            android:onClick="onBtnBottonBaoyangClick" />
 
         <Space
             android:layout_width="0dp"
@@ -44,6 +44,18 @@
             android:layout_height="40dp"
             android:onClick="onBtnBottonDeviceClick"
             android:background="@drawable/device_button1" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imageViewScan"
+            android:layout_width="25dp"
+            android:layout_height="40dp"
+            android:onClick="onBtnBootonScanClick"
+            app:background="@drawable/attention1" />
 
         <Space
             android:layout_width="0dp"
