@@ -39,6 +39,7 @@ public class FragmentSingleTest extends Fragment {
     ImageView btnQuick;
     ProgerssCircle progerssCircle;
     TextView tipInfo;
+    ImageView btnSetting;
 
 
     private BluetoothAdapter mBluetoothAdapter;
@@ -68,6 +69,9 @@ public class FragmentSingleTest extends Fragment {
         btnSepcimen = root.findViewById(R.id.btnSepcimen);
         btnSepcimen.setOnClickListener(clickBtnSepcimen);
 
+        btnSetting = root.findViewById(R.id.btnSetting);
+        btnSetting.setOnClickListener(clickBtnSetting);
+
         btnStandard = root.findViewById(R.id.btnStandard);
         btnStandard.setOnClickListener(clickBtnStandard);
 
@@ -96,11 +100,20 @@ public class FragmentSingleTest extends Fragment {
 
     View.OnClickListener  clickBtnSepcimen = new View.OnClickListener(){
         /**
-         * 打开病人信息模框
+         * 打开病人对话框
          * @param v
          */
         public void onClick(View v){
             InfoDialog.showDialog(getContext());
+        }
+    };
+    View.OnClickListener  clickBtnSetting = new View.OnClickListener(){
+        /**
+         * 打开设置对话框
+         * @param v
+         */
+        public void onClick(View v){
+            SettingDialog.showDialog(getContext());
         }
     };
     View.OnClickListener  clickBtnStandard = new View.OnClickListener(){

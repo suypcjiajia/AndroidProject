@@ -9,6 +9,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "d2ia.db";
     public static final String TEST_RESULT_TABLE = "TestResult";
+    public static final String SETTING_TABLE = "Setting";
 
 
     public MyDbHelper(Context context) {
@@ -55,6 +56,20 @@ public class MyDbHelper extends SQLiteOpenHelper {
             db.execSQL(sql);
         }catch (Exception e){
             System.out.println(e.getMessage());
+            return;
+        }
+
+        String sql2 = "create table if not exists "  + SETTING_TABLE + " " +
+                "(" +
+                "id varchar(64) PRIMARY KEY," + //项
+                "value text" +  //值
+                ")";
+        try {
+            System.out.println(sql);
+            db.execSQL(sql2);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return;
         }
     }
 

@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
@@ -42,8 +43,13 @@ public class FragmentCurve extends Fragment {
     int index = 0;
     int count = 0;
 
+    //保存LineDataSet集合
+    ArrayList<ILineDataSet> dataSets;// = new ArrayList<>();
+
+
     public FragmentCurve() {
         // Required empty public constructor
+        dataSets = new ArrayList<>();
     }
 
 
@@ -127,44 +133,80 @@ public class FragmentCurve extends Fragment {
 
     }
 
+
+    void makeMultLine(){
+
+        for(int i= 1;i< 10;i++ ){
+            TestRecord tmp = new TestRecord();
+            ArrayList<Integer> values1 = new ArrayList<>();
+            values1.add(1);
+            values1.add(4);
+            values1.add(12);
+            values1.add(48);
+            values1.add(12);
+            values1.add(4);
+            values1.add(1);
+
+            values1.add(1);
+            values1.add(2);
+            values1.add(4);
+            values1.add(8);
+            values1.add(16);
+            values1.add(8);
+            values1.add(4);
+            values1.add(2);
+            values1.add(1);
+
+            int index = 0;
+
+
+
+            tmp.id =  "12345";
+            tmp.result = "阳性";
+            tmp.testTime = "2021-04-09 08:30";
+            tmp.name = "suyp";
+            tmp.age = "6";
+            tmp.sex = "男";
+            tmp.testMan = "test";
+            tmp.curver.add("2020-02-17 16:28:01," + (values1.get(index++)));
+            tmp.curver.add("2020-02-17 16:29:01," + (values1.get(index++)));
+            tmp.curver.add("2020-02-17 16:30:01,"+ (values1.get(index++)));
+            tmp.curver.add("2020-02-17 16:31:01,"+ (values1.get(index++)));
+            tmp.curver.add("2020-02-17 16:32:01,"+ (values1.get(index++)));
+            tmp.curver.add("2020-02-17 16:33:01,"+ (values1.get(index++)));
+            tmp.curver.add("2020-02-17 16:34:01,"+ (values1.get(index++)));
+
+            tmp.curver.add("2020-02-17 16:35:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:36:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:37:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:38:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:39:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:40:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:41:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:42:01,"+ (values1.get(index++)*i));
+            tmp.curver.add("2020-02-17 16:43:01,"+ (values1.get(index++)*i));
+
+
+            showRecord(tmp);
+        }
+
+    }
+
+
     public void showFirstRecord(){
         index = 0;
        // count = FragmentSingleTest.biaoBenDao.count();
         count = 1;
         if( count != 0) {
-//            TestRecord tmp = new TestRecord();
-//
-//            tmp.id =  "12345";
-//            tmp.result = "阳性";
-//            tmp.testTime = "2021-04-09 08:30";
-//            tmp.name = "suyp";
-//            tmp.age = "6";
-//            tmp.sex = "男";
-//            tmp.testMan = "test";
-//            tmp.curver.add("2020-02-17 16:28:01,1");
-//            tmp.curver.add("2020-02-17 16:29:01,2");
-//            tmp.curver.add("2020-02-17 16:30:01,4");
-//            tmp.curver.add("2020-02-17 16:31:01,8");
-//            tmp.curver.add("2020-02-17 16:32:01,16");
-//            tmp.curver.add("2020-02-17 16:33:01,24");
-//            tmp.curver.add("2020-02-17 16:34:01,16");
-//            tmp.curver.add("2020-02-17 16:35:01,8");
-//            tmp.curver.add("2020-02-17 16:36:01,4");
-//            tmp.curver.add("2020-02-17 16:37:01,2");
-//            tmp.curver.add("2020-02-17 16:38:01,1");
-//
-//            tmp.curver.add("2020-02-17 16:39:01,1");
-//            tmp.curver.add("2020-02-17 16:40:01,2");
-//            tmp.curver.add("2020-02-17 16:41:01,4");
-//            tmp.curver.add("2020-02-17 16:42:01,8");
-//            tmp.curver.add("2020-02-17 16:43:01,16");
-//            tmp.curver.add("2020-02-17 16:44:01,8");
-//            tmp.curver.add("2020-02-17 16:45:01,4");
-//            tmp.curver.add("2020-02-17 16:46:01,2");
-//            tmp.curver.add("2020-02-17 16:37:01,1");
 
-            showRecord(FragmentSingleTest.biaoBenDao.getOne(index));
-            //showRecord(tmp);
+            makeMultLine();
+
+
+            //showRecord(FragmentSingleTest.biaoBenDao.getOne(index));
+
+
+
+
         }
         showCount();
 
@@ -231,7 +273,7 @@ public class FragmentCurve extends Fragment {
         }
 
         //设置数据1  参数1：数据源 参数2：图例名称
-        LineDataSet set1 = new LineDataSet(values1, "曲线");
+        LineDataSet set1 = new LineDataSet(values1, "");
         set1.setColor(Color.GRAY);
         set1.setCircleColor(Color.GRAY);
         set1.setLineWidth(1f);//设置线宽
@@ -244,12 +286,14 @@ public class FragmentCurve extends Fragment {
         set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);//设置曲线展示为圆滑曲线（
 
         //保存LineDataSet集合
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        //ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1); // add the datasets
+
+
+
         //创建LineData对象 属于LineChart折线图的数据集合
         LineData data = new LineData(dataSets);
         // 添加到图表中
-
         lineChart.setData(data);
 
         //获取此图表的x轴
