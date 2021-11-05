@@ -19,6 +19,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,6 +168,22 @@ public class ActivityMain extends AppCompatActivity {
         public void onClick(View v) {
             setBottonSingleTest();
             viewPager.setCurrentItem(0);
+
+
+            try{
+            DatagramSocket socket =  new DatagramSocket();
+                byte[] buf = "hello world".getBytes();
+
+                DatagramPacket packet = new DatagramPacket(buf,
+                        buf.length,
+                        InetAddress.getByName("255.255.255.255"),
+                        666);
+                //给服务端发送数据
+                socket.send(packet);
+                socket.close();
+            }catch (IOException e){
+                System.out.println(e);
+            }
         }
     };
 
